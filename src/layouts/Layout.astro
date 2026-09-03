@@ -1,23 +1,75 @@
+---
+export interface Props {
+  title?: string;
+}
+
+const { title = 'Sansalica — Inmobiliaria' } = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --color-gold:             #C9A96E;
+    --color-white:            #FFFFFF;
+    --color-navy:             #1B2A4A;
+    --color-gray:             #E0E1E2;
+    --color-surface:          #E8EAED;
+    --color-black:            #000000;
+    --color-overlay:          rgba(0, 0, 0, 0.50);
+    --color-navbar-bg:        rgba(255, 255, 255, 0.80);
+    --color-btn-ghost-bg:     rgba(255, 255, 255, 0.16);
+    --color-btn-ghost-border: rgba(255, 255, 255, 1.00);
+    --color-white-0:          rgba(255, 255, 255, 0.00);
+    --font-primary:           'Playfair Display', Georgia, 'Times New Roman', serif;
+  }
+
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    font-family: var(--font-primary);
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  ul {
+    list-style: none;
+  }
 </style>
