@@ -1,0 +1,141 @@
+---
+import logo from '../assets/logo.svg';
+
+export interface Props {
+  activeLink?: 'inicio' | 'inmuebles' | 'nosotros' | 'contacto';
+}
+
+const { activeLink = 'inicio' } = Astro.props;
+
+const links = [
+  { label: 'Inicio',    href: '/',          key: 'inicio'    },
+  { label: 'Inmuebles', href: '/inmuebles',  key: 'inmuebles' },
+  { label: 'Nosotros',  href: '/nosotros',   key: 'nosotros'  },
+  { label: 'Contacto',  href: '/contacto',   key: 'contacto'  },
+] as const;
+---
+
+<header class="navbar-wrapper">
+  <nav class="navbar" aria-label="Navegación principal">
+    <a href="/" class="navbar__logo" aria-label="Sansalica — Ir al inicio">
+      <img src={logo.src} alt="Sansalica" class="navbar__logo-img" />
+    </a>
+
+    <ul class="navbar__links">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={[
+              'navbar__link',
+              { 'navbar__link--active': link.key === activeLink }
+            ]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .navbar-wrapper {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 4rem);
+    max-width: 1100px;
+    z-index: 100;
+  }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1.5rem;
+    background: var(--color-navbar-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+  }
+
+  .navbar__logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .navbar__logo-img {
+    height: 38px;
+    width: auto;
+  }
+
+  .navbar__links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .navbar__link {
+    display: inline-block;
+    padding: 0.4rem 1.1rem;
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-navy);
+    border-radius: 50px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .navbar__link:hover {
+    color: var(--color-gold);
+  }
+
+  .navbar__link--active {
+    color: var(--color-gold);
+    font-weight: 600;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .navbar-wrapper {
+      top: 1rem;
+      width: calc(100% - 2rem);
+    }
+
+    .navbar {
+      padding: 0.6rem 1rem;
+      border-radius: 16px;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .navbar__logo-img {
+      height: 30px;
+    }
+
+    .navbar__links {
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .navbar__link {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.65rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .navbar {
+      justify-content: center;
+    }
+
+    .navbar__links {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+</style>
