@@ -1,0 +1,478 @@
+---
+// FiltrosSidebar.astro
+---
+
+<aside class="filters-sidebar">
+  <form class="filters-form" id="filters-form">
+    <div class="filters-body">
+      <h2 class="filters-sidebar__title">Filtros</h2>
+      
+      <!-- UBICACIÓN -->
+      <div class="filter-group">
+        <h3 class="filter-group__label">UBICACIÓN</h3>
+        <div class="select-wrapper">
+          <select name="city" aria-label="Ciudades" class="filter-input">
+            <option value="">Ciudades</option>
+            <option value="bogota">Bogotá</option>
+            <option value="medellin">Medellín</option>
+            <option value="cartagena">Cartagena</option>
+          </select>
+          <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="select-wrapper mt-2">
+          <select name="zone" aria-label="Zonas" class="filter-input">
+            <option value="">Zonas</option>
+            <option value="norte">Norte</option>
+            <option value="sur">Sur</option>
+            <option value="oriente">Oriente</option>
+            <option value="occidente">Occidente</option>
+          </select>
+          <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <!-- OPERACIÓN Y TIPO -->
+      <div class="filter-group">
+        <h3 class="filter-group__label">OPERACIÓN Y TIPO</h3>
+        <div class="select-wrapper">
+          <select name="operation_type" aria-label="Venta y renta" class="filter-input">
+            <option value="">Venta y renta</option>
+            <option value="Venta">Venta</option>
+            <option value="Alquiler">Renta</option>
+          </select>
+          <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="select-wrapper mt-2">
+          <select name="property_type" aria-label="Tipos" class="filter-input">
+            <option value="">Tipos</option>
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Local Comercial">Local Comercial</option>
+            <option value="Terreno">Terreno</option>
+          </select>
+          <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+
+      <!-- PRECIO (COP) -->
+      <div class="filter-group">
+        <h3 class="filter-group__label">PRECIO (COP)</h3>
+        <div class="filter-row">
+          <input type="number" name="min_price" placeholder="Min" class="filter-input flex-1" min="0" />
+          <input type="number" name="max_price" placeholder="Max" class="filter-input flex-1" min="0" />
+        </div>
+      </div>
+
+      <!-- CARACTERÍSTICAS -->
+      <div class="filter-group">
+        <h3 class="filter-group__label">CARACTERÍSTICAS</h3>
+        <div class="select-wrapper mb-2">
+          <select name="min_sqm" aria-label="Mín m2" class="filter-input">
+            <option value="">Mín m²</option>
+            <option value="50">50 m²</option>
+            <option value="100">100 m²</option>
+            <option value="200">200 m²</option>
+          </select>
+          <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <div class="filter-row">
+          <div class="select-wrapper flex-1">
+            <select name="bedrooms" aria-label="Habitaciones" class="filter-input px-sm">
+              <option value="">Hab</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+            </select>
+            <svg class="select-icon select-icon--small" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+          <div class="select-wrapper flex-1">
+            <select name="bathrooms" aria-label="Baños" class="filter-input px-sm">
+              <option value="">Bañ</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+            </select>
+            <svg class="select-icon select-icon--small" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+          <div class="select-wrapper flex-1">
+            <select name="parking_spots" aria-label="Parqueaderos" class="filter-input px-sm">
+              <option value="">Par</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+            </select>
+            <svg class="select-icon select-icon--small" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERIOR -->
+      <div class="filter-group">
+        <h3 class="filter-group__label">INTERIOR</h3>
+        <div class="checkbox-list">
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Balcón" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Balcón</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Cocina Integral" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Cocina Integral</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Aire Acondicionado" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Aire Acondicionado</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Amoblado" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Amoblado</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Terraza" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Terraza</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Cuarto de Servicio" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Cuarto de Servicio</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Clósets Empotrados" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Clósets Empotrados</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Piso en Madera" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Piso en Madera</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Estudio" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Estudio</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="features" value="Ventanas Panorámicas" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Ventanas Panorámicas</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- ZONAS COMUNES -->
+      <div class="filter-group">
+        <h3 class="filter-group__label">ZONAS COMUNES</h3>
+        <div class="checkbox-list">
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Piscina" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Piscina</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Salón Social" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Salón Social</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Vigilancia 24h" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Vigilancia 24h</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Parqueadero Visitantes" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Parqueadero Visitantes</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Gimnasio" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Gimnasio</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Ascensor" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Ascensor</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Zona BBQ" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Zona BBQ</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Portería" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Portería</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Jardín" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Jardín</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" name="amenities" value="Cancha de Tenis" />
+            <span class="checkmark"></span>
+            <span class="checkbox-text">Cancha de Tenis</span>
+          </label>
+        </div>
+      </div>
+    </div> <!-- /filters-body -->
+
+    <div class="filters-footer">
+      <div class="filters-actions">
+        <button type="submit" class="btn-submit">Aplicar filtros</button>
+        <button type="reset" class="btn-reset">Limpiar filtros</button>
+      </div>
+    </div>
+  </form>
+</aside>
+
+<style>
+  .filters-sidebar {
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-white);
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  }
+
+  .filters-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .filters-body {
+    padding: 1.75rem 1.25rem 0.5rem 1.25rem;
+  }
+
+  .filters-sidebar__title {
+    font-family: var(--font-primary);
+    font-size: 1.4rem;
+    color: var(--color-navy);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-group {
+    margin-bottom: 1.75rem;
+  }
+
+  .filter-group__label {
+    font-family: var(--font-secondary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .select-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .select-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #999;
+  }
+
+  .select-icon--small {
+    right: 8px;
+  }
+
+  .filter-input {
+    width: 100%;
+    appearance: none;
+    background-color: #F8F9FA;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    padding: 0.65rem 1rem;
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    color: var(--color-navy);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .filter-input::placeholder {
+    color: #9CA3AF;
+    opacity: 1;
+  }
+
+  /* Make select gray when the empty option is selected */
+  select.filter-input:has(option[value=""]:checked) {
+    color: #9CA3AF;
+  }
+
+  /* Ensure the dropdown list items show the active color */
+  select.filter-input option {
+    color: var(--color-navy);
+  }
+
+  select.filter-input option[value=""] {
+    color: #9CA3AF;
+  }
+
+  .filter-input:focus {
+    outline: none;
+    border-color: var(--color-gold);
+    box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.1);
+  }
+
+  .filter-input.px-sm {
+    padding-left: 0.5rem;
+    padding-right: 1.5rem; /* Space for arrow */
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .flex-1 {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .mt-2 {
+    margin-top: 0.5rem;
+  }
+
+  .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Checkboxes */
+  .checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .custom-checkbox {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 24px;
+    cursor: pointer;
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    color: #555;
+    user-select: none;
+  }
+
+  .custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 16px;
+    width: 16px;
+    background-color: #F8F9FA;
+    border: 1px solid #E5E7EB;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .custom-checkbox:hover input ~ .checkmark {
+    border-color: var(--color-gold);
+  }
+
+  .custom-checkbox input:checked ~ .checkmark {
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  .custom-checkbox .checkmark:after {
+    left: 5px;
+    top: 2px;
+    width: 4px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  /* Buttons */
+  .filters-footer {
+    padding: 0 1.25rem 1.75rem 1.25rem;
+    background: #ffffff;
+    border-bottom-left-radius: 1.25rem;
+    border-bottom-right-radius: 1.25rem;
+  }
+
+  .filters-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--color-navy);
+    border: none;
+    border-radius: 6px;
+    color: var(--color-white);
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(29, 56, 114, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .btn-submit:hover {
+    background-color: #152955;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(29, 56, 114, 0.35);
+  }
+
+  .btn-reset {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: transparent;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    color: #666;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-reset:hover {
+    background-color: #F8F9FA;
+    color: var(--color-navy);
+    border-color: #D1D5DB;
+  }
+</style>

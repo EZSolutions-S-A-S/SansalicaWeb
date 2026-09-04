@@ -1,0 +1,228 @@
+---
+export interface Props {
+  inmueble: {
+    id: number;
+    title: string;
+    operation_type: string;
+    property_type: string;
+    price: number | string;
+    square_meters: number | string;
+    location: string;
+    bedrooms?: number | null;
+    bathrooms?: number | null;
+    parking_spots?: number | null;
+    photos?: { url: string; order: number }[];
+  };
+}
+
+const { inmueble } = Astro.props;
+
+// Formatting price in COP
+const formattedPrice = new Intl.NumberFormat('es-CO', {
+  style: 'currency',
+  currency: 'COP',
+  maximumFractionDigits: 0,
+}).format(Number(inmueble.price)).replace('COP', '$').trim();
+
+const mainPhotoUrl = inmueble.photos && inmueble.photos.length > 0 
+  ? inmueble.photos.sort((a, b) => a.order - b.order)[0].url 
+  : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'; // Fallback image
+
+// Ensure 'Alquiler' is shown as 'Renta' in the UI
+const displayOperation = inmueble.operation_type === 'Alquiler' ? 'Renta' : inmueble.operation_type;
+---
+
+<article class="property-card">
+  <div class="property-card__image-container">
+    <img src={mainPhotoUrl} alt={inmueble.title} class="property-card__image" loading="lazy" />
+    <div class="property-card__badges">
+      <span class="badge badge--gold">{displayOperation}</span>
+      <span class="badge badge--navy">{inmueble.property_type}</span>
+    </div>
+  </div>
+  
+  <div class="property-card__content">
+    <div class="property-card__location">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 15.007 4 10a8 8 0 0 1 16 0"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+      <span>{inmueble.location}</span>
+    </div>
+    
+    <h3 class="property-card__title">{inmueble.title}</h3>
+    
+    <div class="property-card__footer">
+      <p class="property-card__price">{formattedPrice}</p>
+      
+      <div class="property-card__specs">
+        <div class="spec">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+          </svg>
+          <span>{inmueble.square_meters} m²</span>
+        </div>
+        
+        {inmueble.bedrooms && (
+          <div class="spec">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>
+            </svg>
+            <span>{inmueble.bedrooms}</span>
+          </div>
+        )}
+        
+        {inmueble.bathrooms && (
+          <div class="spec">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-1C4.67 2.5 4 3.17 4 4v2"/>
+              <path d="M4 12h16a1 1 0 0 1 1 1v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-3a1 1 0 0 1 1-1Z"/>
+              <path d="M6 20v2"/>
+              <path d="M18 20v2"/>
+            </svg>
+            <span>{inmueble.bathrooms}</span>
+          </div>
+        )}
+        
+        {inmueble.parking_spots && (
+          <div class="spec">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>
+            </svg>
+            <span>{inmueble.parking_spots}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .property-card {
+    background-color: var(--color-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .property-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+  }
+
+  .property-card__image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .property-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  
+  .property-card:hover .property-card__image {
+    transform: scale(1.03);
+  }
+
+  .property-card__badges {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .badge {
+    font-family: var(--font-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .badge--gold {
+    background-color: rgba(201, 169, 110, 0.9);
+    color: var(--color-white);
+  }
+
+  .badge--navy {
+    background-color: rgba(29, 56, 114, 0.85);
+    color: var(--color-white);
+  }
+
+  .property-card__content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Ocupa todo el alto restante de la tarjeta */
+  }
+
+  .property-card__location {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #666;
+    font-family: var(--font-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .property-card__title {
+    font-family: var(--font-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-navy);
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    /* Reserva el espacio equivalente a dos renglones */
+    min-height: 2.8em; 
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .property-card__footer {
+    margin-top: auto; /* Empuja el precio y los datos técnicos al fondo de forma idéntica */
+  }
+
+  .property-card__price {
+    font-family: var(--font-primary);
+    font-size: 1.35rem;
+    color: var(--color-gold);
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+  }
+
+  .property-card__specs {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    border-top: 1px solid var(--color-surface);
+    padding-top: 1rem;
+  }
+
+  .spec {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #777;
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+  }
+  
+  .spec svg {
+    color: #999;
+  }
+</style>
