@@ -1,0 +1,261 @@
+---
+interface Props {
+  id: string | number;
+  title: string;
+  price: number;
+  operation_type: 'Venta' | 'Alquiler' | string;
+  property_type: string;
+  location: string;
+  status?: string;
+}
+
+const { id, title, price, operation_type, property_type, location, status } = Astro.props;
+
+// 1. Formateo de Moneda Dinámico
+const formattedPriceStr = new Intl.NumberFormat('es-CO', {
+  style: 'currency',
+  currency: 'COP',
+  maximumFractionDigits: 0
+}).format(price).replace('COP', '').trim(); // Remove built-in COP to custom style it later
+
+// Extraer el símbolo del $ para estilizarlo
+const hasDollarSign = formattedPriceStr.includes('$');
+const priceAmount = formattedPriceStr.replace('$', '').trim();
+
+// 2. Desglose dinámico de Ubicación (Ciudad y Zona)
+const locationParts = location.split(' - ');
+// Fallback si usan ' · ' en lugar de ' - '
+const splitChar = location.includes(' · ') ? ' · ' : ' - ';
+const parts = location.split(splitChar);
+
+const city = parts[0]?.trim() || 'Colombia';
+const zone = parts[1]?.trim() || location;
+
+// Mapeo amigable para la UI
+const displayOperation = operation_type === 'Alquiler' ? 'Renta' : operation_type;
+
+// 3. Generación Dinámica del Enlace y Mensaje de WhatsApp (HU-004)
+const WHATSAPP_NUMBER = "573000000000"; // Reemplazar o leer desde import.meta.env.PUBLIC_WHATSAPP_NUMBER
+const whatsappMessage = `Hola Sansalica, estoy interesado en el inmueble: "${title}" (Ref ID: #${id}, $ ${priceAmount} COP). Quisiera recibir más información.`;
+const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+---
+
+<aside class="detail-sidebar">
+  <div class="price-card">
+    <h3 class="price-subtitle">Precio de {displayOperation}</h3>
+    <div class="price-display">
+      <span class="price-currency">$</span>
+      <span class="price-amount">{priceAmount}</span>
+      <span class="price-cop">cop</span>
+    </div>
+    
+    <div class="guarantees-row">
+      <div class="guarantee-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+        <span>Asesoría sin costo</span>
+      </div>
+      <div class="guarantee-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Respuesta en menos de 2 horas</span>
+      </div>
+      <div class="guarantee-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Información 100% verificada</span>
+      </div>
+    </div>
+    
+    <a 
+      href={whatsappUrl} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="whatsapp-btn"
+      aria-label={`Contactar por WhatsApp sobre ${title}`}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.871.815 2.796.815 3.183 0 5.769-2.586 5.769-5.767.001-3.18-2.584-5.766-5.769-5.766zm0-2c4.28 0 7.769 3.488 7.769 7.766 0 4.281-3.488 7.768-7.769 7.768-1.332 0-2.436-.341-3.484-.949l-4.547 1.192 1.213-4.43c-.703-1.12-1.002-2.316-1.002-3.581 0-4.279 3.489-7.766 7.82-7.766z"/>
+      </svg>
+      <span>Contactar por WhatsApp</span>
+    </a>
+    <p class="whatsapp-subtext">Te conectamos con un asesor experto</p>
+    
+    <div class="summary-table">
+      <div class="summary-row">
+        <div class="summary-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          Ciudad
+        </div>
+        <div class="summary-value">{city}</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="4" height="4" x="9" y="9" rx="1"/></svg>
+          Zona
+        </div>
+        <div class="summary-value">{zone}</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Tipo
+        </div>
+        <div class="summary-value">{property_type}</div>
+      </div>
+      <div class="summary-row">
+        <div class="summary-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+          Operación
+        </div>
+        <div class="summary-value">{displayOperation}</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  /* D. Card de Precio y Contacto (Sidebar) */
+  .detail-sidebar {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .price-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+
+  .price-subtitle {
+    font-family: var(--font-secondary);
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .price-display {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1.5rem 0;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(29, 56, 114, 0.12);
+    color: var(--color-gold);
+  }
+
+  .price-currency {
+    font-family: var(--font-primary);
+    font-size: 2.2rem;
+    font-weight: 700;
+  }
+
+  .price-amount {
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 6vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1;
+    word-break: break-word;
+  }
+
+  .price-cop {
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    text-transform: lowercase;
+    font-weight: 500;
+    color: rgba(201, 169, 110, 0.8);
+  }
+
+  .guarantees-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .guarantee-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .guarantee-item:not(:last-child) {
+    border-right: 1px solid rgba(29, 56, 114, 0.12);
+  }
+
+  .guarantee-item span {
+    font-family: var(--font-secondary);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: #888;
+    font-weight: 500;
+  }
+
+  .whatsapp-btn {
+    width: 100%;
+    background-color: #25D366;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: var(--font-secondary);
+    font-size: 1.05rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    transition: all 0.2s ease;
+    margin: 1.5rem 0 0.5rem 0;
+    text-decoration: none;
+  }
+
+  .whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    background-color: #20BA56;
+  }
+
+  .whatsapp-subtext {
+    text-align: center;
+    font-family: var(--font-secondary);
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 2rem;
+  }
+
+  .summary-table {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .summary-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .summary-value {
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+</style>

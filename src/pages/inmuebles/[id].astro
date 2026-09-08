@@ -1,0 +1,706 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import PropertyContactCard from '../../components/PropertyContactCard.astro';
+
+// Usamos mock data basado en Figma. 
+export function getStaticPaths() {
+  return Array.from({ length: 15 }, (_, i) => ({
+    params: { id: String(i + 1) },
+  }));
+}
+
+const { id } = Astro.params;
+
+const inmueble = {
+  id: '1',
+  title: 'Penthouse Panorámico en El Rosales',
+  operation_type: 'Venta',
+  property_type: 'Penthouse',
+  price: 2900000000,
+  square_meters: 320,
+  location: 'Bogotá · El Rosales',
+  city: 'Bogotá',
+  zone: 'El Rosales',
+  bedrooms: 4,
+  bathrooms: 4,
+  parking_spots: 3,
+  status: 'Disponible',
+  description: 'Espectacular penthouse de dos niveles con terraza privada de 80 m² y vistas 360° sobre la ciudad. Acabados europeos importados, cocina Bulthaup, spa privado. Proyecto de arquitectura de firma reconocida en el corazón del Rosales.',
+  features: ['Balcón', 'Cocina Integral', 'Clósets Empotrados', 'Terraza', 'Ventanas Panorámicas'],
+  amenities: ['Piscina', 'Salón Social', 'Vigilancia 24/7', 'Gimnasio', 'Ascensor'],
+  photos: [
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  ],
+  whatsapp: '573000000000'
+};
+
+const formattedPrice = new Intl.NumberFormat('es-CO').format(inmueble.price);
+---
+
+<Layout title={`${inmueble.title} | Sansalica`} theme="light">
+  <div class="property-detail-page">
+    <div class="detail-nav-wrapper">
+      <Navbar activeLink="inmuebles" />
+    </div>
+
+    <main class="detail-container">
+      <!-- A. Galería de Fotos Interactiva -->
+      <section class="gallery-section">
+        <div class="gallery-main">
+          <div class="gallery-badges">
+            <span class="badge badge--gold">{inmueble.operation_type}</span>
+            <span class="badge badge--navy">{inmueble.property_type}</span>
+          </div>
+          
+          <button class="gallery-arrow gallery-arrow--prev" aria-label="Foto anterior" id="prev-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          
+          <img src={inmueble.photos[0]} alt={inmueble.title} class="gallery-img" id="main-photo" />
+          
+          <button class="gallery-arrow gallery-arrow--next" aria-label="Siguiente foto" id="next-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          
+          <div class="gallery-dots" id="gallery-dots">
+            {inmueble.photos.map((_, idx) => (
+              <button class={`dot ${idx === 0 ? 'dot--active' : ''}`} data-index={idx} aria-label={`Ir a foto ${idx + 1}`}></button>
+            ))}
+          </div>
+        </div>
+        
+        <div class="gallery-thumbnails" id="gallery-thumbnails">
+          {inmueble.photos.map((photo, idx) => (
+            <button class={`thumbnail-btn ${idx === 0 ? 'thumbnail-btn--active' : ''}`} data-index={idx}>
+              <img src={photo} alt={`Miniatura ${idx + 1}`} class="thumbnail-img" />
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <div class="detail-layout">
+        <!-- Contenido Izquierdo -->
+        <div class="detail-content">
+          <!-- B. Cabecera y Especificaciones -->
+          <div class="header-section">
+            <p class="location">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              {inmueble.location}
+            </p>
+            
+            <div class="title-row">
+              <h1 class="property-title">{inmueble.title}</h1>
+              <span class="status-badge" data-status={inmueble.status}>
+                {inmueble.status}
+              </span>
+            </div>
+            
+            <div class="metrics-grid">
+              <div class="metric-card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+                <span class="metric-value">{inmueble.square_meters} m²</span>
+                <span class="metric-label">Superficie</span>
+              </div>
+              <div class="metric-card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+                <span class="metric-value">{inmueble.bedrooms}</span>
+                <span class="metric-label">Habitaciones</span>
+              </div>
+              <div class="metric-card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-1C4.67 2.5 4 3.17 4 4v2"/><path d="M4 12h16a1 1 0 0 1 1 1v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-3a1 1 0 0 1 1-1Z"/><path d="M6 20v2"/><path d="M18 20v2"/></svg>
+                <span class="metric-value">{inmueble.bathrooms}</span>
+                <span class="metric-label">Baños</span>
+              </div>
+              <div class="metric-card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 11h10"/><path d="M10 7v8"/><path d="M14 7v8"/></svg>
+                <span class="metric-value">{inmueble.parking_spots}</span>
+                <span class="metric-label">Parqueaderos</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- C. Descripción, Características y Áreas Comunes -->
+          <div class="description-section">
+            <h2 class="section-title">Descripción</h2>
+            <p class="description-text">{inmueble.description}</p>
+          </div>
+          
+          <div class="features-section">
+            <h2 class="section-title">Características del inmueble</h2>
+            <div class="pills-grid">
+              {inmueble.features.map(feature => (
+                <div class="pill">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BA8A46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div class="amenities-section">
+            <h2 class="section-title">Áreas comunes del conjunto</h2>
+            <div class="pills-grid">
+              {inmueble.amenities.map(amenity => (
+                <div class="pill">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BA8A46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>{amenity}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- D. Card de Precio y Contacto (Sidebar) -->
+        <PropertyContactCard 
+          id={inmueble.id}
+          title={inmueble.title}
+          price={inmueble.price}
+          operation_type={inmueble.operation_type}
+          property_type={inmueble.property_type}
+          location={inmueble.location}
+          status={inmueble.status}
+        />
+      </div>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  /* 1. Reglas Generales de Diseño */
+  .property-detail-page {
+    min-height: 100vh;
+    padding-bottom: 5rem;
+  }
+
+  .detail-nav-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0 2rem 0;
+  }
+
+  .detail-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 4rem;
+  }
+
+  /* A. Galería de Fotos Interactiva */
+  .gallery-section {
+    margin-bottom: 3rem;
+  }
+
+  .gallery-main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    height: auto;
+    min-height: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    background: #e0e0e0;
+  }
+
+  @media (min-width: 992px) {
+    .gallery-main {
+      height: 500px;
+      aspect-ratio: auto;
+    }
+  }
+
+  .gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+
+  .gallery-badges {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    z-index: 10;
+  }
+
+  .badge {
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-white);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .badge--gold {
+    background: rgba(201, 169, 110, 0.85);
+  }
+
+  .badge--navy {
+    background: rgba(29, 56, 114, 0.85);
+  }
+
+  .gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-navy);
+    z-index: 10;
+    transition: background 0.2s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .gallery-arrow:hover {
+    background: #ffffff;
+  }
+
+  .gallery-arrow--prev {
+    left: 1rem;
+  }
+
+  .gallery-arrow--next {
+    right: 1rem;
+  }
+
+  .gallery-dots {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .dot--active {
+    background: #ffffff;
+    width: 20px;
+    border-radius: 4px;
+  }
+
+  .gallery-thumbnails {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scrollbar-width: none;
+  }
+
+  .gallery-thumbnails::-webkit-scrollbar {
+    display: none;
+  }
+
+  .thumbnail-btn {
+    flex: 0 0 calc(25% - 0.75rem);
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 0.2s ease;
+    background: #e0e0e0;
+  }
+
+  @media (max-width: 768px) {
+    .thumbnail-btn {
+      flex: 0 0 120px;
+    }
+  }
+
+  .thumbnail-btn--active {
+    border-color: var(--color-gold);
+  }
+
+  .thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Layout Principal */
+  .detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 992px) {
+    .detail-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* B. Cabecera y Especificaciones */
+  .location {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-secondary);
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .title-row {
+      flex-direction: column;
+    }
+  }
+
+  .property-title {
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    color: var(--color-navy);
+    line-height: 1.15;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .status-badge {
+    padding: 0.4rem 1.25rem;
+    border-radius: 9999px;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-white);
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .status-badge[data-status="Disponible"] {
+    background-color: #8E9F8E;
+  }
+  .status-badge[data-status="Reservado"] {
+    background-color: #BA8A46;
+  }
+  .status-badge[data-status="Vendido"] {
+    background-color: #9E7474;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 3.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .metric-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+
+  .metric-value {
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--color-navy);
+    margin: 0.75rem 0 0.25rem 0;
+  }
+
+  .metric-label {
+    font-family: var(--font-secondary);
+    font-size: 0.8rem;
+    color: #888;
+  }
+
+  /* C. Descripción, Características y Áreas Comunes */
+  .section-title {
+    font-family: var(--font-secondary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-navy);
+    margin-bottom: 1.25rem;
+  }
+
+  .description-section {
+    margin-bottom: 3rem;
+  }
+
+  .description-text {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #555;
+  }
+
+  .features-section, .amenities-section {
+    margin-bottom: 3rem;
+  }
+
+  .pills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .pill {
+    background: #ffffff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-navy);
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+
+  /* D. Card de Precio y Contacto (Sidebar) */
+  .detail-sidebar {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .price-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.02);
+  }
+
+  .price-subtitle {
+    font-family: var(--font-secondary);
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .price-display {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    color: var(--color-gold);
+  }
+
+  .price-currency {
+    font-family: var(--font-primary);
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .price-amount {
+    font-family: var(--font-primary);
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .price-cop {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #888;
+  }
+
+  .guarantees-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1.75rem;
+    margin-bottom: 1.75rem;
+    border-bottom: 1px solid #f0eee6;
+  }
+
+  .guarantee-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .guarantee-item span {
+    font-family: var(--font-secondary);
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: #555;
+    font-weight: 500;
+  }
+
+  .btn-whatsapp {
+    width: 100%;
+    background-color: #25D366;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: var(--font-secondary);
+    font-size: 1.05rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    transition: all 0.2s ease;
+    margin-bottom: 0.75rem;
+  }
+
+  .btn-whatsapp:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    background-color: #20BA56;
+  }
+
+  .whatsapp-subtext {
+    text-align: center;
+    font-family: var(--font-secondary);
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 2rem;
+  }
+
+  .summary-table {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0eee6;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .summary-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .summary-value {
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-navy);
+  }
+</style>
+
+<script>
+  // Script para manejar la Galería Interactiva, Toggle de Estado y WhatsApp Redirect
+  document.addEventListener('astro:page-load', () => {
+    initPropertyDetail();
+  });
+
+  // Fallback si astro:page-load no está presente
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initPropertyDetail();
+  } else {
+    document.addEventListener('DOMContentLoaded', initPropertyDetail);
+  }
+
+  function initPropertyDetail() {
+    // 1. Galería Interactiva
+    const mainPhoto = document.getElementById('main-photo');
+    const thumbnails = document.querySelectorAll('.thumbnail-btn');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    
+    if (mainPhoto && thumbnails.length > 0) {
+      let currentIndex = 0;
+      
+      const updateGallery = (index) => {
+        // Update index bounds
+        if (index < 0) index = thumbnails.length - 1;
+        if (index >= thumbnails.length) index = 0;
+        currentIndex = index;
+        
+        // Update main photo src
+        const newSrc = thumbnails[currentIndex].querySelector('img').src;
+        mainPhoto.style.opacity = '0';
+        setTimeout(() => {
+          mainPhoto.src = newSrc;
+          mainPhoto.style.opacity = '1';
+        }, 150);
+        
+        // Update active states
+        thumbnails.forEach((t, i) => t.classList.toggle('thumbnail-btn--active', i === currentIndex));
+        dots.forEach((d, i) => d.classList.toggle('dot--active', i === currentIndex));
+      };
+
+      thumbnails.forEach((thumb, idx) => {
+        thumb.addEventListener('click', () => updateGallery(idx));
+      });
+      
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => updateGallery(idx));
+      });
+      
+      prevBtn?.addEventListener('click', () => updateGallery(currentIndex - 1));
+      nextBtn?.addEventListener('click', () => updateGallery(currentIndex + 1));
+    }
+
+  }
+</script>
