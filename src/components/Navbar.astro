@@ -3,54 +3,83 @@ import logo from '../assets/logo.svg';
 
 export interface Props {
   activeLink?: 'inicio' | 'inmuebles' | 'nosotros' | 'contacto';
+  variant?: 'fixed' | 'page';
+  anchorMode?: boolean;
 }
 
-const { activeLink = 'inicio' } = Astro.props;
+const { activeLink = 'inicio', variant = 'fixed', anchorMode = false } = Astro.props;
 
-const links = [
-  { label: 'Inicio',    href: '/',          key: 'inicio'    },
-  { label: 'Inmuebles', href: '/catalogo',  key: 'inmuebles' },
-  { label: 'Nosotros',  href: '/nosotros',   key: 'nosotros'  },
-  { label: 'Contacto',  href: '/contacto',   key: 'contacto'  },
-] as const;
+const links = anchorMode
+  ? [
+      { label: 'Inicio',    href: '#hero',     key: 'inicio'    },
+      { label: 'Inmuebles', href: '/catalogo',  key: 'inmuebles' },
+      { label: 'Nosotros',  href: '#nosotros',  key: 'nosotros'  },
+      { label: 'Contacto',  href: '#contacto',  key: 'contacto'  },
+    ]
+  : [
+      { label: 'Inicio',    href: '/',          key: 'inicio'    },
+      { label: 'Inmuebles', href: '/catalogo',  key: 'inmuebles' },
+      { label: 'Nosotros',  href: '/nosotros',  key: 'nosotros'  },
+      { label: 'Contacto',  href: '/contacto',  key: 'contacto'  },
+    ];
 ---
 
-<nav class="navbar-container" aria-label="Navegación principal">
-  <a href="/" class="navbar__logo" aria-label="Sansalica — Ir al inicio">
-    <img src={logo.src} alt="Sansalica" class="navbar__logo-img" />
-  </a>
+<header class:list={['navbar-wrapper', { 'navbar-wrapper--page': variant === 'page' }]}>
+  <nav class="navbar" aria-label="Navegación principal">
+    <a href={anchorMode ? '#hero' : '/'} class="navbar__logo" aria-label="Sansalica — Ir al inicio">
+      <img src={logo.src} alt="Sansalica" class="navbar__logo-img" />
+    </a>
 
-  <ul class="navbar__links">
-    {links.map((link) => (
-      <li>
-        <a
-          href={link.href}
-          class:list={[
-            'navbar__link',
-            { 'navbar__link--active': link.key === activeLink }
-          ]}
-        >
-          {link.label}
-        </a>
-      </li>
-    ))}
-  </ul>
-</nav>
+    <ul class="navbar__links">
+      {links.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={[
+              'navbar__link',
+              { 'navbar__link--active': link.key === activeLink }
+            ]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
 
-<style>
-  .navbar-container {
-    width: 90%;
-    max-width: 1200px;
-    border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 0.9rem 2.5rem;
-    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.35);
+<style is:global>
+  .navbar-wrapper {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 4rem);
+    max-width: 1100px;
+    z-index: 1000;
+  }
+
+  .navbar-wrapper--page {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: calc(100% - 4rem);
+    max-width: 1100px;
+    margin: 1.5rem auto 0;
+    z-index: 100;
+  }
+
+  .navbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0.9rem 2.5rem;
+    background: var(--color-navbar-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
   }
 
   .navbar__logo {
@@ -77,6 +106,7 @@ const links = [
     font-size: 1.05rem;
     font-weight: 500;
     color: var(--color-navy);
+    border-radius: 20px;
     transition: color 0.2s ease, background-color 0.2s ease;
   }
 
@@ -91,8 +121,18 @@ const links = [
 
   /* ── Responsive ── */
   @media (max-width: 768px) {
-    .navbar-container {
+    .navbar-wrapper {
+      top: 1rem;
       width: calc(100% - 2rem);
+    }
+
+    .navbar-wrapper--page {
+      top: auto;
+      width: calc(100% - 2rem);
+      margin: 1rem auto 0;
+    }
+
+    .navbar {
       padding: 0.6rem 1rem;
       border-radius: 16px;
       flex-wrap: wrap;
@@ -115,7 +155,7 @@ const links = [
   }
 
   @media (max-width: 400px) {
-    .navbar-container {
+    .navbar {
       justify-content: center;
     }
 

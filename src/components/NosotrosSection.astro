@@ -1,0 +1,180 @@
+---
+---
+
+<section class="nosotros">
+  <div class="nosotros__container">
+
+    <h2 class="nosotros__heading">Quiénes somos</h2>
+
+    <div class="nosotros__cards">
+      <article class="nosotros__card">
+        <h3 class="nosotros__card-title">Misión</h3>
+        <p class="nosotros__card-text">
+          Acompañar a las personas del Quindío en la compra, venta y arriendo de sus inmuebles,
+          brindando un servicio honesto, cercano y transparente que les permita tomar decisiones
+          seguras sobre uno de los pasos más importantes de su vida.
+        </p>
+      </article>
+
+      <article class="nosotros__card">
+        <h3 class="nosotros__card-title">Visión</h3>
+        <p class="nosotros__card-text">
+          Ser en 2030 la inmobiliaria de referencia en Armenia y el Quindío para quienes buscan
+          comprar, vender o arrendar con confianza, reconocidos por la cercanía con nuestros
+          clientes y por hacer del proceso inmobiliario algo simple y transparente.
+        </p>
+      </article>
+    </div>
+
+    <div class="nosotros__values">
+      <div class="nosotros__value">
+        <span class="nosotros__value-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </span>
+        <p class="nosotros__value-label">Transparencia</p>
+      </div>
+
+      <div class="nosotros__value">
+        <span class="nosotros__value-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        <p class="nosotros__value-label">Trámites simples</p>
+      </div>
+
+      <div class="nosotros__value">
+        <span class="nosotros__value-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </span>
+        <p class="nosotros__value-label">Procesos seguros</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .nosotros {
+    background-color: var(--color-page-bg);
+    min-height: calc(100vh - 90px);
+    padding: 3rem 2rem 5rem;
+  }
+
+  .nosotros__container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .nosotros__heading {
+    font-family: var(--font-primary);
+    font-size: 1.4rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--color-gold);
+    margin-bottom: 2.5rem;
+  }
+
+  .nosotros__cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .nosotros__card {
+    background-color: var(--color-card-bg);
+    border: 1px solid rgba(201, 169, 110, 0.18);
+    border-radius: 10px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .nosotros__card-title {
+    font-family: var(--font-primary);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    color: var(--color-blue);
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .nosotros__card-text {
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.75;
+    color: var(--color-navy);
+    text-align: center;
+  }
+
+  .nosotros__values {
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+  }
+
+  .nosotros__value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .nosotros__value-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gold);
+    width: 48px;
+    height: 48px;
+  }
+
+  .nosotros__value-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .nosotros__value-label {
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-gold);
+    text-align: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .nosotros {
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    .nosotros__cards {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .nosotros__values {
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nosotros__values {
+      gap: 2rem;
+    }
+
+    .nosotros__card {
+      padding: 2rem 1.5rem;
+    }
+  }
+</style>

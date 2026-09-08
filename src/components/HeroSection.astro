@@ -1,18 +1,14 @@
 ---
 import heroBg from '../assets/hero-bg.png';
-import Navbar from './Navbar.astro';
 ---
 
 <section
+  id="hero"
   class="hero"
   style={`--hero-bg: url('${heroBg.src}')`}
   aria-label="Sección principal"
 >
   <div class="hero__overlay" aria-hidden="true"></div>
-
-  <div class="home-nav-wrapper">
-    <Navbar activeLink="inicio" />
-  </div>
 
   <div class="hero__content">
     <p class="hero__eyebrow">Inmobiliaria Sansalica</p>
@@ -28,8 +24,8 @@ import Navbar from './Navbar.astro';
     </p>
 
     <div class="hero__actions">
-      <a href="/catalogo" class="btn btn--primary">Ver catálogo</a>
-      <a href="/nosotros"  class="btn btn--secondary">Quiénes somos</a>
+      <a href="#catalogo" class="btn btn--primary">Ver catálogo</a>
+      <a href="#nosotros" class="btn btn--secondary">Quiénes somos</a>
     </div>
   </div>
 </section>
@@ -56,22 +52,11 @@ import Navbar from './Navbar.astro';
     z-index: 1;
   }
 
-  .home-nav-wrapper {
-    position: absolute;
-    top: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    z-index: 50;
-  }
-
   .hero__content {
     position: relative;
     z-index: 2;
     text-align: center;
-    padding: 10rem 1.5rem 3rem; /* Increased padding top */
+    padding: 10rem 1.5rem 3rem;
     max-width: 820px;
     width: 100%;
   }

@@ -1,8 +1,37 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
 import HeroSection from '../components/HeroSection.astro';
+import NosotrosSection from '../components/NosotrosSection.astro';
 ---
 
 <Layout title="Sansalica — Inmobiliaria">
+  <Navbar activeLink="inicio" anchorMode={true} />
+
   <HeroSection />
+
+  <div id="catalogo" class="catalogo-placeholder">
+    <p class="catalogo-placeholder__text">Catálogo de inmuebles próximamente</p>
+  </div>
+
+  <div id="nosotros">
+    <NosotrosSection />
+  </div>
 </Layout>
+
+<style>
+  .catalogo-placeholder {
+    min-height: 100vh;
+    background-color: var(--color-page-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .catalogo-placeholder__text {
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    color: var(--color-navy);
+    opacity: 0.5;
+  }
+</style>

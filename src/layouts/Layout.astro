@@ -39,19 +39,28 @@ const { title = 'Sansalica — Inmobiliaria', theme = 'dark' } = Astro.props;
 
   :root {
     --color-gold:             #C9A96E;
+    --color-gold-dark:        #A1883F;
     --color-white:            #FFFFFF;
-    --color-navy:             #1D3872;
+    --color-navy:             #1B2A4A;
+    --color-blue:             #1D3872;
     --color-gray:             #E0E1E2;
     --color-surface:          #E8EAED;
     --color-black:            #000000;
     --color-cream:            #F8F6EC;
+    --color-page-bg:          #FFFDF3;
+    --color-card-bg:          #FFF3DE;
     --color-overlay:          rgba(0, 0, 0, 0.50);
     --color-navbar-bg:        rgba(255, 255, 255, 0.80);
     --color-btn-ghost-bg:     rgba(255, 255, 255, 0.16);
     --color-btn-ghost-border: rgba(255, 255, 255, 1.00);
     --color-white-0:          rgba(255, 255, 255, 0.00);
+    --color-card-bg-80:       rgba(255, 243, 222, 0.80);
     --font-primary:           'Playfair Display', Georgia, 'Times New Roman', serif;
     --font-secondary:         'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   html,
