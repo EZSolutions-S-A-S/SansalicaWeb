@@ -180,7 +180,13 @@ const formattedPrice = new Intl.NumberFormat('es-CO').format(inmueble.price);
     width: 100%;
     display: flex;
     justify-content: center;
-    padding: 1.5rem 0 2rem 0;
+    padding: 9rem 0 2rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .detail-nav-wrapper {
+      padding: 7rem 0 2rem 0;
+    }
   }
 
   .detail-container {
