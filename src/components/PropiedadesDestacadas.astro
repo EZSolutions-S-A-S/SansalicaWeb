@@ -1,0 +1,116 @@
+---
+import InmueblePublicCard from './InmueblePublicCard.astro';
+
+const featuredProperties = [
+  {
+    id: 1,
+    title: "Penthouse Panorámico en El Rosales",
+    operation_type: "Venta",
+    property_type: "Penthouse",
+    location: "Bogotá · El Rosales",
+    price: 3500000000,
+    square_meters: 320,
+    bedrooms: 4,
+    bathrooms: 4,
+    parking_spots: 3,
+    photos: [{ url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
+  },
+  {
+    id: 2,
+    title: "Apartamento Moderno en El Poblado",
+    operation_type: "Renta",
+    property_type: "Apartamento",
+    location: "Medellín · El Poblado",
+    price: 15000000,
+    square_meters: 320,
+    bedrooms: 4,
+    bathrooms: 4,
+    parking_spots: 3,
+    photos: [{ url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
+  },
+  {
+    id: 3,
+    title: "Casa Colonial en Castillogrande",
+    operation_type: "Venta",
+    property_type: "Casa",
+    location: "Cartagena · Castillogrande",
+    price: 4200000000,
+    square_meters: 320,
+    bedrooms: 4,
+    bathrooms: 4,
+    parking_spots: 3,
+    photos: [{ url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
+  }
+];
+---
+
+<section class="featured-section">
+  <div class="featured-properties-container">
+    <header class="featured-header">
+      <span class="featured-subtitle">Selección especial</span>
+      <h2 class="featured-title">Propiedades Destacadas</h2>
+    </header>
+
+    <div class="featured-grid">
+      {featuredProperties.map((property: any) => (
+        <InmueblePublicCard inmueble={property} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-section {
+    background-color: var(--color-cream, #F4F1E8);
+    padding: 5rem 0;
+  }
+
+  .featured-properties-container {
+    width: calc(100% - 4rem);
+    max-width: 1100px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .featured-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .featured-subtitle {
+    display: block;
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .featured-title {
+    font-family: var(--font-primary);
+    color: var(--color-navy);
+    font-size: clamp(2.5rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2.5rem;
+    align-items: stretch;
+  }
+
+  @media (max-width: 1024px) {
+    .featured-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

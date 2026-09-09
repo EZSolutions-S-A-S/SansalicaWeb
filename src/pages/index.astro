@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import HeroSection from '../components/HeroSection.astro';
+import PropiedadesDestacadas from '../components/PropiedadesDestacadas.astro';
 import NosotrosSection from '../components/NosotrosSection.astro';
 import CTASection from '../components/CTASection.astro';
 import FooterSection from '../components/FooterSection.astro';
@@ -12,8 +13,8 @@ import FooterSection from '../components/FooterSection.astro';
 
   <HeroSection />
 
-  <div id="catalogo" data-section="catalogo" class="catalogo-placeholder">
-    <p class="catalogo-placeholder__text">Catálogo de inmuebles próximamente</p>
+  <div id="catalogo" data-section="catalogo">
+    <PropiedadesDestacadas />
   </div>
 
   <div id="nosotros" data-section="nosotros">
@@ -29,21 +30,6 @@ import FooterSection from '../components/FooterSection.astro';
 <style>
   #nosotros {
     scroll-margin-top: 90px;
-  }
-
-  .catalogo-placeholder {
-    min-height: 100vh;
-    background-color: var(--color-page-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .catalogo-placeholder__text {
-    font-family: var(--font-primary);
-    font-size: 1.1rem;
-    color: var(--color-navy);
-    opacity: 0.5;
   }
 </style>
 

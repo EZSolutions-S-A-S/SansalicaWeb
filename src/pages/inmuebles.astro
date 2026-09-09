@@ -1,17 +1,3 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Navbar from '../components/Navbar.astro';
+return Astro.redirect('/catalogo');
 ---
-
-<Layout title="Inmuebles — Sansalica">
-  <div class="page-inmuebles">
-    <Navbar activeLink="inmuebles" variant="page" />
-  </div>
-</Layout>
-
-<style>
-  .page-inmuebles {
-    min-height: 100vh;
-    background-color: var(--color-page-bg);
-  }
-</style>
