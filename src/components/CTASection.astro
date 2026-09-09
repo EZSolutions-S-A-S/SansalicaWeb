@@ -1,0 +1,99 @@
+---
+const WHATSAPP_NUMBER = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573177587800';
+const whatsappMessage = 'Hola Sansalica, me gustaría recibir asesoría para encontrar mi próxima propiedad.';
+const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
+---
+
+<section class="cta">
+  <div class="cta__container">
+    <h2 class="cta__title">¿LISTO PARA ENCONTRAR TU PRÓXIMA PROPIEDAD?</h2>
+    <p class="cta__subtitle">
+      Inicia la conversación con uno de nuestros asesores para resolver tus dudas y
+      agilizar la búsqueda o venta de tu inmueble hoy mismo.
+    </p>
+    <a
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="cta__btn"
+      aria-label="Contactar a Sansalica por WhatsApp"
+    >
+      <svg class="cta__btn-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.871.815 2.796.815 3.183 0 5.769-2.586 5.769-5.767.001-3.18-2.584-5.766-5.769-5.766zm0-2c4.28 0 7.769 3.488 7.769 7.766 0 4.281-3.488 7.768-7.769 7.768-1.332 0-2.436-.341-3.484-.949l-4.547 1.192 1.213-4.43c-.703-1.12-1.002-2.316-1.002-3.581 0-4.279 3.489-7.766 7.82-7.766z"/>
+      </svg>
+      Contactar por WhatsApp
+    </a>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background-color: var(--color-navy);
+    padding: 7rem 2rem 6rem;
+    text-align: center;
+  }
+
+  .cta__container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .cta__title {
+    font-family: var(--font-primary);
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    color: var(--color-white);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.01em;
+  }
+
+  .cta__subtitle {
+    font-family: var(--font-primary);
+    font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.80);
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+
+  .cta__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.9rem 2.2rem;
+    background-color: var(--color-gold);
+    color: var(--color-white);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .cta__btn:hover {
+    background-color: var(--color-gold-dark);
+    transform: translateY(-2px);
+  }
+
+  .cta__btn:active {
+    transform: translateY(0);
+  }
+
+  .cta__btn-icon {
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .cta {
+      padding: 4rem 1.25rem;
+    }
+
+    .cta__btn {
+      width: 100%;
+      max-width: 320px;
+      justify-content: center;
+    }
+  }
+</style>

@@ -29,7 +29,7 @@
     <div class="nosotros__values">
       <div class="nosotros__value">
         <span class="nosotros__value-icon" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
             <circle cx="12" cy="12" r="3"/>
           </svg>
@@ -39,7 +39,7 @@
 
       <div class="nosotros__value">
         <span class="nosotros__value-icon" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
             <rect x="9" y="3" width="6" height="4" rx="1"/>
             <path d="M9 12l2 2 4-4"/>
@@ -50,7 +50,7 @@
 
       <div class="nosotros__value">
         <span class="nosotros__value-icon" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             <path d="M9 12l2 2 4-4"/>
           </svg>
@@ -66,7 +66,7 @@
   .nosotros {
     background-color: var(--color-page-bg);
     min-height: calc(100vh - 90px);
-    padding: 3rem 2rem 5rem;
+    padding: 5rem 2rem 8rem;
   }
 
   .nosotros__container {
@@ -76,11 +76,12 @@
 
   .nosotros__heading {
     font-family: var(--font-primary);
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     font-weight: 400;
-    font-style: italic;
+    font-style: normal;
     color: var(--color-gold);
     margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
   }
 
   .nosotros__cards {
@@ -109,7 +110,7 @@
 
   .nosotros__card-text {
     font-family: var(--font-primary);
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 400;
     line-height: 1.75;
     color: var(--color-navy);
@@ -134,8 +135,8 @@
     align-items: center;
     justify-content: center;
     color: var(--color-gold);
-    width: 48px;
-    height: 48px;
+    width: 54px;
+    height: 54px;
   }
 
   .nosotros__value-icon svg {
@@ -151,7 +152,6 @@
     text-align: center;
   }
 
-  /* ── Responsive ── */
   @media (max-width: 768px) {
     .nosotros {
       padding: 2rem 1.25rem 4rem;

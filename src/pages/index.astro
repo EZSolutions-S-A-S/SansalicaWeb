@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import HeroSection from '../components/HeroSection.astro';
 import NosotrosSection from '../components/NosotrosSection.astro';
+import CTASection from '../components/CTASection.astro';
+import FooterSection from '../components/FooterSection.astro';
 ---
 
 <Layout title="Sansalica — Inmobiliaria">
@@ -10,16 +12,25 @@ import NosotrosSection from '../components/NosotrosSection.astro';
 
   <HeroSection />
 
-  <div id="catalogo" class="catalogo-placeholder">
+  <div id="catalogo" data-section="catalogo" class="catalogo-placeholder">
     <p class="catalogo-placeholder__text">Catálogo de inmuebles próximamente</p>
   </div>
 
-  <div id="nosotros">
+  <div id="nosotros" data-section="nosotros">
     <NosotrosSection />
+  </div>
+
+  <div id="contacto" data-section="contacto">
+    <CTASection />
+    <FooterSection />
   </div>
 </Layout>
 
 <style>
+  #nosotros {
+    scroll-margin-top: 90px;
+  }
+
   .catalogo-placeholder {
     min-height: 100vh;
     background-color: var(--color-page-bg);
@@ -35,3 +46,36 @@ import NosotrosSection from '../components/NosotrosSection.astro';
     opacity: 0.5;
   }
 </style>
+
+<script>
+  const sections = [
+    { id: 'hero',     key: 'inicio'    },
+    { id: 'catalogo', key: 'inmuebles' },
+    { id: 'nosotros', key: 'nosotros'  },
+    { id: 'contacto', key: 'contacto'  },
+  ];
+
+  function setActive(key) {
+    document.querySelectorAll('.navbar__link').forEach(link => {
+      link.classList.toggle('navbar__link--active', link.dataset.navKey === key);
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const key = entry.target.dataset.navKey;
+        if (key) setActive(key);
+      }
+    });
+  }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+
+  sections.forEach(({ id, key }) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.dataset.navKey = key;
+      observer.observe(el);
+    }
+  });
+</script>
+

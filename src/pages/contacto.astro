@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import CTASection from '../components/CTASection.astro';
+import FooterSection from '../components/FooterSection.astro';
+---
+
+<Layout title="Contacto — Sansalica">
+  <div class="page-contacto">
+    <Navbar activeLink="contacto" variant="page" />
+    <CTASection />
+    <FooterSection />
+  </div>
+</Layout>
+
+<style>
+  .page-contacto .navbar {
+    background: rgba(19, 35, 60, 0.85);
+    border: 1px solid rgba(201, 169, 110, 0.25);
+  }
+
+  .page-contacto .navbar__link {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .page-contacto .navbar__link:hover {
+    color: var(--color-gold);
+  }
+
+  .page-contacto .navbar__link--active {
+    color: var(--color-gold);
+  }
+
+  .page-contacto {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-navy);
+  }
+</style>
