@@ -9,24 +9,17 @@ export interface Props {
 
 const { activeLink = 'inicio', variant = 'fixed', anchorMode = false } = Astro.props;
 
-const links = anchorMode
-  ? [
-      { label: 'Inicio',    href: '#hero',     key: 'inicio'    },
-      { label: 'Inmuebles', href: '/catalogo',  key: 'inmuebles' },
-      { label: 'Nosotros',  href: '#nosotros',  key: 'nosotros'  },
-      { label: 'Contacto',  href: '#contacto',  key: 'contacto'  },
-    ]
-  : [
-      { label: 'Inicio',    href: '/',          key: 'inicio'    },
-      { label: 'Inmuebles', href: '/catalogo',  key: 'inmuebles' },
-      { label: 'Nosotros',  href: '/nosotros',  key: 'nosotros'  },
-      { label: 'Contacto',  href: '/contacto',  key: 'contacto'  },
-    ];
+const links = [
+  { label: 'Inicio',    href: '/#inicio',    key: 'inicio'    },
+  { label: 'Inmuebles', href: '/catalogo',   key: 'inmuebles' },
+  { label: 'Nosotros',  href: '/#nosotros',  key: 'nosotros'  },
+  { label: 'Contacto',  href: '/#contacto',  key: 'contacto'  },
+];
 ---
 
 <header class:list={['navbar-wrapper', { 'navbar-wrapper--page': variant === 'page' }]}>
   <nav class="navbar" aria-label="Navegación principal">
-    <a href={anchorMode ? '#hero' : '/'} class="navbar__logo" aria-label="Sansalica — Ir al inicio">
+    <a href="/#inicio" class="navbar__logo" aria-label="Sansalica — Ir al inicio">
       <img src={logo.src} alt="Sansalica" class="navbar__logo-img" />
     </a>
 

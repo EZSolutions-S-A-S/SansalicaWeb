@@ -61,12 +61,13 @@ const { title = 'Sansalica — Inmobiliaria', theme = 'dark' } = Astro.props;
 
   html {
     scroll-behavior: smooth;
+    overflow-y: auto;
   }
 
-  html,
   body {
-    width: 100%;
-    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
     font-family: var(--font-primary);
   }
 

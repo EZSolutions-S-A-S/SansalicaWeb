@@ -9,11 +9,13 @@ import FooterSection from '../components/FooterSection.astro';
 ---
 
 <Layout title="Sansalica — Inmobiliaria">
-  <Navbar activeLink="inicio" anchorMode={true} />
+  <Navbar activeLink="inicio" />
 
-  <HeroSection />
+  <div id="inicio" data-section="inicio">
+    <HeroSection />
+  </div>
 
-  <div id="catalogo" data-section="catalogo">
+  <div id="inmuebles" data-section="inmuebles">
     <PropiedadesDestacadas />
   </div>
 
@@ -28,17 +30,17 @@ import FooterSection from '../components/FooterSection.astro';
 </Layout>
 
 <style>
-  #nosotros {
+  #nosotros, #inmuebles, #contacto {
     scroll-margin-top: 90px;
   }
 </style>
 
 <script>
   const sections = [
-    { id: 'hero',     key: 'inicio'    },
-    { id: 'catalogo', key: 'inmuebles' },
-    { id: 'nosotros', key: 'nosotros'  },
-    { id: 'contacto', key: 'contacto'  },
+    { id: 'inicio',    key: 'inicio'    },
+    { id: 'inmuebles', key: 'inmuebles' },
+    { id: 'nosotros',  key: 'nosotros'  },
+    { id: 'contacto',  key: 'contacto'  },
   ];
 
   function setActive(key) {
