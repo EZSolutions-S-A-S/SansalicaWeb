@@ -32,7 +32,7 @@ const mainPhotoUrl = inmueble.photos && inmueble.photos.length > 0
 const displayOperation = inmueble.operation_type === 'Alquiler' ? 'Renta' : inmueble.operation_type;
 ---
 
-<article class="property-card">
+<a href={`/inmuebles/${inmueble.id}`} class="property-card">
   <div class="property-card__image-container">
     <img src={mainPhotoUrl} alt={inmueble.title} class="property-card__image" loading="lazy" />
     <div class="property-card__badges">
@@ -95,7 +95,7 @@ const displayOperation = inmueble.operation_type === 'Alquiler' ? 'Renta' : inmu
       </div>
     </div>
   </div>
-</article>
+</a>
 
 <style>
   .property-card {
@@ -107,6 +107,8 @@ const displayOperation = inmueble.operation_type === 'Alquiler' ? 'Renta' : inmu
     flex-direction: column;
     height: 100%;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    color: inherit;
   }
   
   .property-card:hover {
