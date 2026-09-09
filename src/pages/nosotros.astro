@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import NosotrosSection from '../components/NosotrosSection.astro';
+---
+
+<Layout title="Nosotros — Sansalica">
+  <div class="page-nosotros">
+    <Navbar activeLink="nosotros" variant="page" />
+    <NosotrosSection />
+  </div>
+</Layout>
+
+<style>
+  .page-nosotros {
+    min-height: 100vh;
+    background-color: var(--color-page-bg);
+  }
+</style>
