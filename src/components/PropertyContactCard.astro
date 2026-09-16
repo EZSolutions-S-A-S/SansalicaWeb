@@ -35,7 +35,7 @@ const zone = parts[1]?.trim() || location;
 const displayOperation = operation_type === 'Alquiler' ? 'Renta' : operation_type;
 
 // 3. Generación Dinámica del Enlace y Mensaje de WhatsApp (HU-004)
-const WHATSAPP_NUMBER = "573000000000"; // Reemplazar o leer desde import.meta.env.PUBLIC_WHATSAPP_NUMBER
+const WHATSAPP_NUMBER = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573177587800';
 const whatsappMessage = `Hola Sansalica, estoy interesado en el inmueble: "${title}" (Ref ID: #${id}, $ ${priceAmount} COP). Quisiera recibir más información.`;
 const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 ---

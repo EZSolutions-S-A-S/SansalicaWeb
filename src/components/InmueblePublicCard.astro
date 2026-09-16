@@ -11,7 +11,7 @@ export interface Props {
     bedrooms?: number | null;
     bathrooms?: number | null;
     parking_spots?: number | null;
-    photos?: { url: string; order: number }[];
+    photos?: any[];
   };
 }
 
@@ -24,9 +24,10 @@ const formattedPrice = new Intl.NumberFormat('es-CO', {
   maximumFractionDigits: 0,
 }).format(Number(inmueble.price)).replace('COP', '$').trim();
 
-const mainPhotoUrl = inmueble.photos && inmueble.photos.length > 0 
-  ? inmueble.photos.sort((a, b) => a.order - b.order)[0].url 
-  : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'; // Fallback image
+const mainPhoto = inmueble.photos && inmueble.photos.length > 0 
+  ? inmueble.photos.sort((a: any, b: any) => (a.order || 0) - (b.order || 0))[0] 
+  : null;
+const mainPhotoUrl = mainPhoto ? (mainPhoto.url || mainPhoto) : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'; // Fallback image
 
 // Ensure 'Alquiler' is shown as 'Renta' in the UI
 const displayOperation = inmueble.operation_type === 'Alquiler' ? 'Renta' : inmueble.operation_type;

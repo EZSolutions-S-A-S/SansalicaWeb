@@ -3,42 +3,62 @@ import Layout from '../../layouts/Layout.astro';
 import Navbar from '../../components/Navbar.astro';
 import PropertyContactCard from '../../components/PropertyContactCard.astro';
 
-// Usamos mock data basado en Figma. 
-export function getStaticPaths() {
-  return Array.from({ length: 15 }, (_, i) => ({
-    params: { id: String(i + 1) },
-  }));
+const API_URL = import.meta.env.PUBLIC_API_URL || 'https://sansalicaback.onrender.com/api';
+const API_KEY = import.meta.env.SECRET_API_KEY || ''; // TODO: Agrega tu API Key en el archivo .env
+
+export async function getStaticPaths() {
+  const API_URL = import.meta.env.PUBLIC_API_URL || 'https://sansalicaback.onrender.com/api';
+  const API_KEY = import.meta.env.SECRET_API_KEY || '';
+  
+  try {
+    const res = await fetch(`${API_URL}/inmuebles/`, {
+      headers: {
+        'Authorization': `Api-Key ${API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const results = data.results || data || [];
+      return results.map((inmueble: any) => ({
+        params: { id: String(inmueble.id) },
+      }));
+    } else {
+      console.error("Error fetching inmuebles for paths:", res.status, res.statusText);
+    }
+  } catch (error) {
+    console.error("Error fetching inmuebles for paths:", error);
+  }
+  return []; // Si el backend no está disponible, no se generan páginas de detalle.
 }
 
 const { id } = Astro.params;
 
-const inmueble = {
-  id: '1',
-  title: 'Penthouse Panorámico en El Rosales',
-  operation_type: 'Venta',
-  property_type: 'Penthouse',
-  price: 2900000000,
-  square_meters: 320,
-  location: 'Bogotá · El Rosales',
-  city: 'Bogotá',
-  zone: 'El Rosales',
-  bedrooms: 4,
-  bathrooms: 4,
-  parking_spots: 3,
-  status: 'Disponible',
-  description: 'Espectacular penthouse de dos niveles con terraza privada de 80 m² y vistas 360° sobre la ciudad. Acabados europeos importados, cocina Bulthaup, spa privado. Proyecto de arquitectura de firma reconocida en el corazón del Rosales.',
-  features: ['Balcón', 'Cocina Integral', 'Clósets Empotrados', 'Terraza', 'Ventanas Panorámicas'],
-  amenities: ['Piscina', 'Salón Social', 'Vigilancia 24/7', 'Gimnasio', 'Ascensor'],
-  photos: [
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-  ],
-  whatsapp: '573000000000'
-};
+let inmueble = null;
+try {
+  const res = await fetch(`${API_URL}/inmuebles/${id}/`, {
+    headers: {
+      'Authorization': `Api-Key ${API_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (res.ok) {
+    inmueble = await res.json();
+  } else {
+    console.error(`Error fetching detail for id ${id}:`, res.status, res.statusText);
+  }
+} catch (error) {
+  console.error("Error fetching inmueble detail:", error);
+}
 
-const formattedPrice = new Intl.NumberFormat('es-CO').format(inmueble.price);
+if (!inmueble) {
+  return Astro.redirect('/catalogo');
+}
+
+// Para la galería de fotos, el backend podría enviar objetos con { url, order }
+const photos = inmueble.photos 
+  ? inmueble.photos.sort((a: any, b: any) => (a.order || 0) - (b.order || 0)).map((p: any) => p.url || p) 
+  : [];
 ---
 
 <Layout title={`${inmueble.title} | Sansalica`} theme="light">
@@ -67,14 +87,14 @@ const formattedPrice = new Intl.NumberFormat('es-CO').format(inmueble.price);
           </button>
           
           <div class="gallery-dots" id="gallery-dots">
-            {inmueble.photos.map((_, idx) => (
+            {photos.map((_, idx) => (
               <button class={`dot ${idx === 0 ? 'dot--active' : ''}`} data-index={idx} aria-label={`Ir a foto ${idx + 1}`}></button>
             ))}
           </div>
         </div>
         
         <div class="gallery-thumbnails" id="gallery-thumbnails">
-          {inmueble.photos.map((photo, idx) => (
+          {photos.map((photo, idx) => (
             <button class={`thumbnail-btn ${idx === 0 ? 'thumbnail-btn--active' : ''}`} data-index={idx}>
               <img src={photo} alt={`Miniatura ${idx + 1}`} class="thumbnail-img" />
             </button>
@@ -132,7 +152,7 @@ const formattedPrice = new Intl.NumberFormat('es-CO').format(inmueble.price);
           <div class="features-section">
             <h2 class="section-title">Características del inmueble</h2>
             <div class="pills-grid">
-              {inmueble.features.map(feature => (
+              {(inmueble.features || []).map((feature: any) => (
                 <div class="pill">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BA8A46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
                   <span>{feature}</span>
@@ -144,7 +164,7 @@ const formattedPrice = new Intl.NumberFormat('es-CO').format(inmueble.price);
           <div class="amenities-section">
             <h2 class="section-title">Áreas comunes del conjunto</h2>
             <div class="pills-grid">
-              {inmueble.amenities.map(amenity => (
+              {(inmueble.amenities || []).map((amenity: any) => (
                 <div class="pill">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BA8A46" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                   <span>{amenity}</span>

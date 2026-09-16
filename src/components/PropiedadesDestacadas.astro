@@ -1,47 +1,29 @@
 ---
 import InmueblePublicCard from './InmueblePublicCard.astro';
 
-const featuredProperties = [
-  {
-    id: 1,
-    title: "Penthouse Panorámico en El Rosales",
-    operation_type: "Venta",
-    property_type: "Penthouse",
-    location: "Bogotá · El Rosales",
-    price: 3500000000,
-    square_meters: 320,
-    bedrooms: 4,
-    bathrooms: 4,
-    parking_spots: 3,
-    photos: [{ url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 2,
-    title: "Apartamento Moderno en El Poblado",
-    operation_type: "Renta",
-    property_type: "Apartamento",
-    location: "Medellín · El Poblado",
-    price: 15000000,
-    square_meters: 320,
-    bedrooms: 4,
-    bathrooms: 4,
-    parking_spots: 3,
-    photos: [{ url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 3,
-    title: "Casa Colonial en Castillogrande",
-    operation_type: "Venta",
-    property_type: "Casa",
-    location: "Cartagena · Castillogrande",
-    price: 4200000000,
-    square_meters: 320,
-    bedrooms: 4,
-    bathrooms: 4,
-    parking_spots: 3,
-    photos: [{ url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
+const API_URL = import.meta.env.PUBLIC_API_URL || 'https://sansalicaback.onrender.com/api';
+const API_KEY = import.meta.env.SECRET_API_KEY || ''; // TODO: Agrega tu API Key en el archivo .env
+
+let featuredProperties = [];
+
+try {
+  const res = await fetch(`${API_URL}/inmuebles/`, {
+    headers: {
+      'Authorization': `Api-Key ${API_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (res.ok) {
+    const data = await res.json();
+    const results = data.results || data || [];
+    // For now, take the first 3 as featured
+    featuredProperties = results.slice(0, 3);
+  } else {
+    console.error("Error fetching featured inmuebles:", res.status, res.statusText);
   }
-];
+} catch (error) {
+  console.error("Error fetching featured inmuebles:", error);
+}
 ---
 
 <section class="featured-section">

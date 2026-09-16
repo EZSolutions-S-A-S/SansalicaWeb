@@ -2,152 +2,26 @@
 import FiltrosSidebar from './FiltrosSidebar.astro';
 import InmueblePublicCard from './InmueblePublicCard.astro';
 
-const API_URL = import.meta.env.PUBLIC_API_URL || 'http://127.0.0.1:8000/api';
+const API_URL = import.meta.env.PUBLIC_API_URL || 'https://sansalicaback.onrender.com/api';
+const API_KEY = import.meta.env.SECRET_API_KEY || ''; // TODO: Agrega tu API Key en el archivo .env
+
 let inmuebles = [];
 
-const mockData = [
-  {
-    id: 1,
-    title: 'Penthouse Panorámico en El Rosales',
-    operation_type: 'Venta',
-    property_type: 'Penthouse',
-    price: 3500000000,
-    square_meters: 320,
-    location: 'Bogotá - El Rosales',
-    bedrooms: 4,
-    bathrooms: 4,
-    parking_spots: 3,
-    photos: [{ url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 2,
-    title: 'Casa Moderna con Piscina',
-    operation_type: 'Alquiler',
-    property_type: 'Casa',
-    price: 15000000,
-    square_meters: 450,
-    location: 'Cartagena - Castillogrande',
-    bedrooms: 5,
-    bathrooms: 6,
-    parking_spots: 4,
-    photos: [{ url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 3,
-    title: 'Apartamento de Lujo',
-    operation_type: 'Venta',
-    property_type: 'Apartamento',
-    price: 1200000000,
-    square_meters: 180,
-    location: 'Medellín - El Poblado',
-    bedrooms: 3,
-    bathrooms: 3,
-    parking_spots: 2,
-    photos: [{ url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 4,
-    title: 'Apartamento Loft Industrial',
-    operation_type: 'Venta',
-    property_type: 'Apartamento',
-    price: 850000000,
-    square_meters: 110,
-    location: 'Bogotá - Chapinero Alto',
-    bedrooms: 2,
-    bathrooms: 2,
-    parking_spots: 1,
-    photos: [{ url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 5,
-    title: 'Casa Campestre',
-    operation_type: 'Venta',
-    property_type: 'Casa',
-    price: 2450000000,
-    square_meters: 380,
-    location: 'Rionegro - Llanogrande',
-    bedrooms: 4,
-    bathrooms: 5,
-    parking_spots: 3,
-    photos: [{ url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 6,
-    title: 'Espectacular Penthouse Dúplex con Terraza Privada y Vista a los Cerros',
-    operation_type: 'Renta',
-    property_type: 'Apartamento',
-    price: 18000000,
-    square_meters: 290,
-    location: 'Bogotá - Cabrera',
-    bedrooms: 3,
-    bathrooms: 4,
-    parking_spots: 2,
-    photos: [{ url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 7,
-    title: 'Loft Moderno',
-    operation_type: 'Renta',
-    property_type: 'Apartamento',
-    price: 4500000,
-    square_meters: 65,
-    location: 'Medellín - El Poblado',
-    bedrooms: 1,
-    bathrooms: 2,
-    parking_spots: 1,
-    photos: [{ url: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 8,
-    title: 'Mansión Contemporánea de Tres Niveles con Jardín Interior',
-    operation_type: 'Venta',
-    property_type: 'Casa',
-    price: 5200000000,
-    square_meters: 620,
-    location: 'Cali - Ciudad Jardín',
-    bedrooms: 5,
-    bathrooms: 6,
-    parking_spots: 4,
-    photos: [{ url: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 9,
-    title: 'Apartamento Estudio',
-    operation_type: 'Venta',
-    property_type: 'Apartamento',
-    price: 420000000,
-    square_meters: 48,
-    location: 'Barranquilla - Altos de Riomar',
-    bedrooms: 1,
-    bathrooms: 1,
-    parking_spots: 1,
-    photos: [{ url: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80', order: 0 }]
-  },
-  {
-    id: 10,
-    title: 'Villa Colonial Restaurada con Piscina y Amplias Zonas Verdes',
-    operation_type: 'Venta',
-    property_type: 'Casa',
-    price: 3900000000,
-    square_meters: 510,
-    location: 'Cartagena - Centro Histórico',
-    bedrooms: 4,
-    bathrooms: 5,
-    parking_spots: 2,
-    photos: [{ url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80', order: 0 }]
-  }
-];
-
 try {
-  const res = await fetch(`${API_URL}/inmuebles/`);
+  const res = await fetch(`${API_URL}/inmuebles/`, {
+    headers: {
+      'Authorization': `Api-Key ${API_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
   if (res.ok) {
     const data = await res.json();
-    inmuebles = data.results || [];
+    inmuebles = data.results || data || []; // Handle both paginated and non-paginated arrays
   } else {
-    inmuebles = mockData;
+    console.error("Error fetching inmuebles:", res.status, res.statusText);
   }
-} catch {
-  inmuebles = mockData;
+} catch (error) {
+  console.error("Error fetching inmuebles:", error);
 }
 ---
 
