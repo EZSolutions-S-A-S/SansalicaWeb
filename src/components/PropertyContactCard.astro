@@ -23,13 +23,24 @@ const hasDollarSign = formattedPriceStr.includes('$');
 const priceAmount = formattedPriceStr.replace('$', '').trim();
 
 // 2. Desglose dinámico de Ubicación (Ciudad y Zona)
-const locationParts = location.split(' - ');
-// Fallback si usan ' · ' en lugar de ' - '
-const splitChar = location.includes(' · ') ? ' · ' : ' - ';
-const parts = location.split(splitChar);
+let city = 'Colombia';
+let zone = '';
 
-const city = parts[0]?.trim() || 'Colombia';
-const zone = parts[1]?.trim() || location;
+if (location.includes(' · ') || location.includes(' - ')) {
+  const splitChar = location.includes(' · ') ? ' · ' : ' - ';
+  const parts = location.split(splitChar);
+  city = parts[0]?.trim();
+  zone = parts.slice(1).join(splitChar)?.trim();
+} else if (location.includes(',')) {
+  // If no dash/dot, maybe it's "Zone, City" or "City, Zone"
+  // Usually the more specific part (Zone) is first, e.g. "sector Parque Fundadores, Armenia Quindio"
+  const parts = location.split(',');
+  zone = parts[0]?.trim();
+  city = parts.slice(1).join(',')?.trim();
+} else {
+  // If it's just one string, put it all in city
+  city = location;
+}
 
 // Mapeo amigable para la UI
 const displayOperation = operation_type === 'Alquiler' ? 'Renta' : operation_type;
@@ -86,13 +97,15 @@ const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
         </div>
         <div class="summary-value">{city}</div>
       </div>
-      <div class="summary-row">
-        <div class="summary-label">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="4" height="4" x="9" y="9" rx="1"/></svg>
-          Zona
+      {zone && (
+        <div class="summary-row">
+          <div class="summary-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="4" height="4" x="9" y="9" rx="1"/></svg>
+            Zona
+          </div>
+          <div class="summary-value">{zone}</div>
         </div>
-        <div class="summary-value">{zone}</div>
-      </div>
+      )}
       <div class="summary-row">
         <div class="summary-label">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -241,16 +254,19 @@ const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   .summary-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 1rem;
   }
 
   .summary-label {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
     font-family: var(--font-secondary);
     font-size: 0.9rem;
     color: #666;
+    flex-shrink: 0;
+    margin-top: 2px;
   }
 
   .summary-value {
@@ -258,5 +274,7 @@ const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--color-navy);
+    text-align: right;
+    word-break: break-word;
   }
 </style>
