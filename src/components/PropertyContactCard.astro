@@ -46,7 +46,7 @@ if (location.includes(' · ') || location.includes(' - ')) {
 const displayOperation = operation_type === 'Alquiler' ? 'Renta' : operation_type;
 
 // 3. Generación Dinámica del Enlace y Mensaje de WhatsApp (HU-004)
-const WHATSAPP_NUMBER = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573177587800';
+const WHATSAPP_NUMBER = import.meta.env.PUBLIC_WHATSAPP_NUMBER || '573137749371';
 const whatsappMessage = `Hola Sansalica, estoy interesado en el inmueble: "${title}" (Ref ID: #${id}, $ ${priceAmount} COP). Quisiera recibir más información.`;
 const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
 ---
@@ -64,10 +64,6 @@ const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
       <div class="guarantee-item">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
         <span>Asesoría sin costo</span>
-      </div>
-      <div class="guarantee-item">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span>Respuesta en menos de 2 horas</span>
       </div>
       <div class="guarantee-item">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C9A96E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
@@ -183,7 +179,7 @@ const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
 
   .guarantees-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     margin-bottom: 1.5rem;
     text-align: center;
   }
