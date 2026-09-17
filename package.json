@@ -14,5 +14,10 @@
   "dependencies": {
     "@astrojs/netlify": "^8.2.6",
     "astro": "^7.1.3"
+  },
+  "overrides": {
+    "svgo": ">=4.1.0",
+    "nanoid": ">=3.3.18",
+    "devalue": ">=5.9.2"
   }
 }
