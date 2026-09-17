@@ -55,9 +55,12 @@ if (!inmueble) {
   return Astro.redirect('/catalogo');
 }
 
-// Para la galería de fotos, el backend podría enviar objetos con { url, order }
-const photos = inmueble.photos 
-  ? inmueble.photos.sort((a: any, b: any) => (a.order || 0) - (b.order || 0)).map((p: any) => p.url || p) 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+
+// Para la galería de fotos, el backend podría enviar objetos con { url, order }.
+// Si a una foto le falta la url, se usa el fallback -- nunca el objeto de la foto.
+const photos = inmueble.photos
+  ? inmueble.photos.sort((a: any, b: any) => (a.order || 0) - (b.order || 0)).map((p: any) => p.url || FALLBACK_IMAGE)
   : [];
 ---
 
@@ -79,13 +82,17 @@ const photos = inmueble.photos
           <button class="gallery-arrow gallery-arrow--prev" aria-label="Foto anterior" id="prev-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
           </button>
-          
-          <img src={inmueble.photos[0]} alt={inmueble.title} class="gallery-img" id="main-photo" />
-          
+
+          <img src={photos[0] || FALLBACK_IMAGE} alt={inmueble.title} class="gallery-img" id="main-photo" />
+
+          <button class="gallery-expand" id="expand-btn" aria-label="Ver imagen completa">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>
+          </button>
+
           <button class="gallery-arrow gallery-arrow--next" aria-label="Siguiente foto" id="next-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </button>
-          
+
           <div class="gallery-dots" id="gallery-dots">
             {photos.map((_, idx) => (
               <button class={`dot ${idx === 0 ? 'dot--active' : ''}`} data-index={idx} aria-label={`Ir a foto ${idx + 1}`}></button>
@@ -101,6 +108,20 @@ const photos = inmueble.photos
           ))}
         </div>
       </section>
+
+      <!-- Lightbox: foto sin recortar, con zoom al hacer click -->
+      <div class="lightbox-overlay" id="lightbox-overlay" aria-hidden="true">
+        <button class="lightbox-close" id="lightbox-close" aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="lightbox-arrow lightbox-arrow--prev" id="lightbox-prev" aria-label="Foto anterior">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <img src="" alt={inmueble.title} class="lightbox-img" id="lightbox-img" />
+        <button class="lightbox-arrow lightbox-arrow--next" id="lightbox-next" aria-label="Siguiente foto">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
 
       <div class="detail-layout">
         <!-- Contenido Izquierdo -->
@@ -300,6 +321,122 @@ const photos = inmueble.photos
 
   .gallery-arrow--next {
     right: 1rem;
+  }
+
+  .gallery-expand {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-in;
+    color: var(--color-navy);
+    z-index: 10;
+    transition: background 0.2s ease;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .gallery-expand:hover {
+    background: #ffffff;
+  }
+
+  .gallery-img {
+    cursor: zoom-in;
+  }
+
+  /* Lightbox */
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 12, 20, 0.94);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .lightbox-overlay.lightbox-overlay--open {
+    display: flex;
+  }
+
+  .lightbox-img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    cursor: zoom-in;
+    transition: transform 0.25s ease;
+    transform-origin: center center;
+    user-select: none;
+  }
+
+  .lightbox-img.lightbox-img--zoomed {
+    cursor: zoom-out;
+    transform: scale(2);
+  }
+
+  .lightbox-close,
+  .lightbox-arrow {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s ease;
+  }
+
+  .lightbox-close:hover,
+  .lightbox-arrow:hover {
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  .lightbox-close {
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 44px;
+    height: 44px;
+  }
+
+  .lightbox-arrow {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+  }
+
+  .lightbox-arrow--prev {
+    left: 1rem;
+  }
+
+  .lightbox-arrow--next {
+    right: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .lightbox-close {
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .lightbox-arrow--prev {
+      left: 0.25rem;
+    }
+
+    .lightbox-arrow--next {
+      right: 0.25rem;
+    }
   }
 
   .gallery-dots {
@@ -727,6 +864,71 @@ const photos = inmueble.photos
       
       prevBtn?.addEventListener('click', () => updateGallery(currentIndex - 1));
       nextBtn?.addEventListener('click', () => updateGallery(currentIndex + 1));
+
+      // 2. Lightbox: la foto sin recortar, con zoom al hacer click. Reutiliza el
+      // mismo currentIndex/updateGallery de la galería inline, así los dos quedan
+      // siempre sincronizados.
+      const expandBtn = document.getElementById('expand-btn');
+      const lightbox = document.getElementById('lightbox-overlay');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxClose = document.getElementById('lightbox-close');
+      const lightboxPrev = document.getElementById('lightbox-prev');
+      const lightboxNext = document.getElementById('lightbox-next');
+
+      if (lightbox && lightboxImg) {
+        const currentPhotoSrc = () =>
+          thumbnails[currentIndex]?.querySelector('img')?.src || mainPhoto.src;
+
+        const openLightbox = () => {
+          lightboxImg.src = currentPhotoSrc();
+          lightboxImg.classList.remove('lightbox-img--zoomed');
+          lightbox.classList.add('lightbox-overlay--open');
+          lightbox.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        };
+
+        const closeLightbox = () => {
+          lightbox.classList.remove('lightbox-overlay--open');
+          lightbox.setAttribute('aria-hidden', 'true');
+          lightboxImg.classList.remove('lightbox-img--zoomed');
+          document.body.style.overflow = '';
+        };
+
+        mainPhoto.addEventListener('click', openLightbox);
+        expandBtn?.addEventListener('click', openLightbox);
+        lightboxClose?.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (event) => {
+          if (event.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') closeLightbox();
+        });
+
+        lightboxImg.addEventListener('click', (event) => {
+          if (lightboxImg.classList.contains('lightbox-img--zoomed')) {
+            lightboxImg.classList.remove('lightbox-img--zoomed');
+            return;
+          }
+          const rect = lightboxImg.getBoundingClientRect();
+          const originX = ((event.clientX - rect.left) / rect.width) * 100;
+          const originY = ((event.clientY - rect.top) / rect.height) * 100;
+          lightboxImg.style.transformOrigin = `${originX}% ${originY}%`;
+          lightboxImg.classList.add('lightbox-img--zoomed');
+        });
+
+        lightboxPrev?.addEventListener('click', (event) => {
+          event.stopPropagation();
+          updateGallery(currentIndex - 1);
+          lightboxImg.src = currentPhotoSrc();
+          lightboxImg.classList.remove('lightbox-img--zoomed');
+        });
+        lightboxNext?.addEventListener('click', (event) => {
+          event.stopPropagation();
+          updateGallery(currentIndex + 1);
+          lightboxImg.src = currentPhotoSrc();
+          lightboxImg.classList.remove('lightbox-img--zoomed');
+        });
+      }
     }
 
   }
