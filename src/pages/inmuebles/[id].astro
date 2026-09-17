@@ -94,14 +94,14 @@ const photos = inmueble.photos
           </button>
 
           <div class="gallery-dots" id="gallery-dots">
-            {photos.map((_, idx) => (
+            {photos.map((_: string, idx: number) => (
               <button class={`dot ${idx === 0 ? 'dot--active' : ''}`} data-index={idx} aria-label={`Ir a foto ${idx + 1}`}></button>
             ))}
           </div>
         </div>
         
         <div class="gallery-thumbnails" id="gallery-thumbnails">
-          {photos.map((photo, idx) => (
+          {photos.map((photo: string, idx: number) => (
             <button class={`thumbnail-btn ${idx === 0 ? 'thumbnail-btn--active' : ''}`} data-index={idx}>
               <img src={photo} alt={`Miniatura ${idx + 1}`} class="thumbnail-img" />
             </button>
@@ -826,29 +826,29 @@ const photos = inmueble.photos
 
   function initPropertyDetail() {
     // 1. Galería Interactiva
-    const mainPhoto = document.getElementById('main-photo');
-    const thumbnails = document.querySelectorAll('.thumbnail-btn');
-    const dots = document.querySelectorAll('.dot');
+    const mainPhoto = document.getElementById('main-photo') as HTMLImageElement | null;
+    const thumbnails = document.querySelectorAll<HTMLButtonElement>('.thumbnail-btn');
+    const dots = document.querySelectorAll<HTMLButtonElement>('.dot');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
-    
+
     if (mainPhoto && thumbnails.length > 0) {
       let currentIndex = 0;
-      
-      const updateGallery = (index) => {
+
+      const updateGallery = (index: number) => {
         // Update index bounds
         if (index < 0) index = thumbnails.length - 1;
         if (index >= thumbnails.length) index = 0;
         currentIndex = index;
-        
+
         // Update main photo src
-        const newSrc = thumbnails[currentIndex].querySelector('img').src;
+        const newSrc = thumbnails[currentIndex].querySelector('img')?.src;
         mainPhoto.style.opacity = '0';
         setTimeout(() => {
-          mainPhoto.src = newSrc;
+          if (newSrc) mainPhoto.src = newSrc;
           mainPhoto.style.opacity = '1';
         }, 150);
-        
+
         // Update active states
         thumbnails.forEach((t, i) => t.classList.toggle('thumbnail-btn--active', i === currentIndex));
         dots.forEach((d, i) => d.classList.toggle('dot--active', i === currentIndex));
@@ -857,11 +857,11 @@ const photos = inmueble.photos
       thumbnails.forEach((thumb, idx) => {
         thumb.addEventListener('click', () => updateGallery(idx));
       });
-      
+
       dots.forEach((dot, idx) => {
         dot.addEventListener('click', () => updateGallery(idx));
       });
-      
+
       prevBtn?.addEventListener('click', () => updateGallery(currentIndex - 1));
       nextBtn?.addEventListener('click', () => updateGallery(currentIndex + 1));
 
@@ -870,7 +870,7 @@ const photos = inmueble.photos
       // siempre sincronizados.
       const expandBtn = document.getElementById('expand-btn');
       const lightbox = document.getElementById('lightbox-overlay');
-      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement | null;
       const lightboxClose = document.getElementById('lightbox-close');
       const lightboxPrev = document.getElementById('lightbox-prev');
       const lightboxNext = document.getElementById('lightbox-next');
