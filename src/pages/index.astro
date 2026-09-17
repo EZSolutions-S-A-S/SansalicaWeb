@@ -1,11 +1,69 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Navbar from '../components/Navbar.astro';
+import HeroSection from '../components/HeroSection.astro';
+import PropiedadesDestacadas from '../components/PropiedadesDestacadas.astro';
+import NosotrosSection from '../components/NosotrosSection.astro';
+import CTASection from '../components/CTASection.astro';
+import FooterSection from '../components/FooterSection.astro';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Sansalica — Inmobiliaria">
+  <Navbar activeLink="inicio" />
+
+  <div id="inicio" data-section="inicio">
+    <HeroSection />
+  </div>
+
+  <div id="inmuebles" data-section="inmuebles">
+    <PropiedadesDestacadas />
+  </div>
+
+  <div id="nosotros" data-section="nosotros">
+    <NosotrosSection />
+  </div>
+
+  <div id="contacto" data-section="contacto">
+    <CTASection />
+    <FooterSection />
+  </div>
 </Layout>
+
+<style>
+  #nosotros, #inmuebles, #contacto {
+    scroll-margin-top: 90px;
+  }
+</style>
+
+<script>
+  const sections = [
+    { id: 'inicio',    key: 'inicio'    },
+    { id: 'inmuebles', key: 'inmuebles' },
+    { id: 'nosotros',  key: 'nosotros'  },
+    { id: 'contacto',  key: 'contacto'  },
+  ];
+
+  function setActive(key) {
+    document.querySelectorAll('.navbar__link').forEach(link => {
+      link.classList.toggle('navbar__link--active', link.dataset.navKey === key);
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const key = entry.target.dataset.navKey;
+        if (key) setActive(key);
+      }
+    });
+  }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+
+  sections.forEach(({ id, key }) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.dataset.navKey = key;
+      observer.observe(el);
+    }
+  });
+</script>
+

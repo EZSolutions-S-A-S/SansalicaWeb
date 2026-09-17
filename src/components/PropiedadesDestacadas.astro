@@ -1,0 +1,98 @@
+---
+import InmueblePublicCard from './InmueblePublicCard.astro';
+
+const API_URL = import.meta.env.PUBLIC_API_URL || 'https://sansalicaback.onrender.com/api';
+const API_KEY = import.meta.env.SECRET_API_KEY || ''; // TODO: Agrega tu API Key en el archivo .env
+
+let featuredProperties = [];
+
+try {
+  const res = await fetch(`${API_URL}/inmuebles/`, {
+    headers: {
+      'Authorization': `Api-Key ${API_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  if (res.ok) {
+    const data = await res.json();
+    const results = data.results || data || [];
+    // For now, take the first 3 as featured
+    featuredProperties = results.slice(0, 3);
+  } else {
+    console.error("Error fetching featured inmuebles:", res.status, res.statusText);
+  }
+} catch (error) {
+  console.error("Error fetching featured inmuebles:", error);
+}
+---
+
+<section class="featured-section">
+  <div class="featured-properties-container">
+    <header class="featured-header">
+      <span class="featured-subtitle">Selección especial</span>
+      <h2 class="featured-title">Propiedades Destacadas</h2>
+    </header>
+
+    <div class="featured-grid">
+      {featuredProperties.map((property: any) => (
+        <InmueblePublicCard inmueble={property} />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured-section {
+    background-color: var(--color-cream, #F4F1E8);
+    padding: 5rem 0;
+  }
+
+  .featured-properties-container {
+    width: calc(100% - 4rem);
+    max-width: 1100px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+
+  .featured-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .featured-subtitle {
+    display: block;
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .featured-title {
+    font-family: var(--font-primary);
+    color: var(--color-navy);
+    font-size: clamp(2.5rem, 5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2.5rem;
+    align-items: stretch;
+  }
+
+  @media (max-width: 1024px) {
+    .featured-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .featured-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

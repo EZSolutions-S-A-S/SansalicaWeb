@@ -1,23 +1,98 @@
+---
+import '../styles/property-card.css';
+
+export interface Props {
+  title?: string;
+  theme?: 'light' | 'dark';
+}
+
+const { title = 'Sansalica — Inmobiliaria', theme = 'dark' } = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="es" data-theme={theme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+<style is:global>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --color-gold:             #C9A96E;
+    --color-gold-dark:        #A1883F;
+    --color-white:            #FFFFFF;
+    --color-navy:             #1B2A4A;
+    --color-blue:             #1D3872;
+    --color-gray:             #E0E1E2;
+    --color-surface:          #E8EAED;
+    --color-black:            #000000;
+    --color-cream:            #F8F6EC;
+    --color-page-bg:          #FFFDF3;
+    --color-card-bg:          #FFF3DE;
+    --color-overlay:          rgba(0, 0, 0, 0.50);
+    --color-navbar-bg:        rgba(255, 255, 255, 0.80);
+    --color-btn-ghost-bg:     rgba(255, 255, 255, 0.16);
+    --color-btn-ghost-border: rgba(255, 255, 255, 1.00);
+    --color-white-0:          rgba(255, 255, 255, 0.00);
+    --color-card-bg-80:       rgba(255, 243, 222, 0.80);
+    --font-primary:           'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-secondary:         'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-y: auto;
+  }
+
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100vh;
+    font-family: var(--font-primary);
+  }
+
+  html[data-theme="dark"] body {
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  html[data-theme="light"] body {
+    background-color: var(--color-cream);
+    color: var(--color-navy);
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  ul {
+    list-style: none;
+  }
 </style>

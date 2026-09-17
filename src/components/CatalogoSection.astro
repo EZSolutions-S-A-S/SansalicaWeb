@@ -1,0 +1,106 @@
+---
+import FiltrosSidebar from './FiltrosSidebar.astro';
+import InmueblePublicCard from './InmueblePublicCard.astro';
+import { buildInmueblesQuery, fetchInmuebles } from '../lib/inmuebles';
+
+const { filters, queryString } = buildInmueblesQuery(Astro.url.searchParams);
+const { inmuebles } = await fetchInmuebles(queryString);
+---
+
+<section class="catalogo-section">
+  <div class="catalogo-container">
+    <header class="catalogo-header">
+      <span class="catalogo-header__subtitle">Portafolio completo</span>
+      <h2 class="catalogo-header__title">Catálogo de Inmuebles</h2>
+    </header>
+
+    <div class="catalogo-layout">
+      <div class="catalogo-sidebar">
+        <FiltrosSidebar filters={filters} basePath="/catalogo" />
+      </div>
+
+      <div class="catalogo-grid" id="catalogo-grid">
+        {inmuebles.map((inmueble: any) => (
+          <InmueblePublicCard inmueble={inmueble} />
+        ))}
+
+        {inmuebles.length === 0 && (
+          <div class="no-results">
+            <p>No se encontraron inmuebles con estos filtros.</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .catalogo-section {
+    background-color: var(--color-cream);
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .catalogo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .catalogo-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .catalogo-header__subtitle {
+    display: block;
+    font-family: var(--font-primary);
+    color: var(--color-gold);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .catalogo-header__title {
+    font-family: var(--font-primary);
+    color: var(--color-navy);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .catalogo-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .catalogo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  /* Mientras carga se ve el skeleton (property-card.css), así que aquí solo se
+     bloquea la interacción — sin atenuar opacidad, para no duplicar la señal de
+     "cargando" encima del propio shimmer del skeleton. */
+  .catalogo-grid[data-loading="true"] {
+    pointer-events: none;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 992px) {
+    .catalogo-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .catalogo-section {
+      padding: 2rem 1rem 3rem;
+    }
+
+    .catalogo-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,212 @@
+/* Estilos de .property-card, compartidos por InmueblePublicCard.astro (SSR) y
+   src/lib/renderInmuebleCard.ts (tarjetas insertadas por JS tras un filtro AJAX).
+   Movidos a CSS global porque el scope automático de Astro no aplica a markup
+   generado a mano en el navegador. Mantener en sync con renderInmuebleCard.ts. */
+
+.property-card {
+  background-color: var(--color-white);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.property-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.property-card__image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.property-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.property-card:hover .property-card__image {
+  transform: scale(1.03);
+}
+
+.property-card__badges {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.badge {
+  font-family: var(--font-secondary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.badge--gold {
+  background-color: rgba(201, 169, 110, 0.9);
+  color: var(--color-white);
+}
+
+.badge--navy {
+  background-color: rgba(29, 56, 114, 0.85);
+  color: var(--color-white);
+}
+
+.property-card__content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* Ocupa todo el alto restante de la tarjeta */
+}
+
+.property-card__location {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #666;
+  font-family: var(--font-secondary);
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.property-card__title {
+  font-family: var(--font-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  /* Reserva el espacio equivalente a dos renglones */
+  min-height: 2.8em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.property-card__footer {
+  margin-top: auto; /* Empuja el precio y los datos técnicos al fondo de forma idéntica */
+}
+
+.property-card__price {
+  font-family: var(--font-primary);
+  font-size: 1.35rem;
+  color: var(--color-gold);
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+}
+
+.property-card__specs {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  border-top: 1px solid var(--color-surface);
+  padding-top: 1rem;
+}
+
+.spec {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #777;
+  font-family: var(--font-secondary);
+  font-size: 0.85rem;
+}
+
+.spec svg {
+  color: #999;
+}
+
+/* Estados de la grilla del catálogo (src/components/CatalogoSection.astro).
+   Global por la misma razón que .property-card: el "sin resultados" y el error de
+   red se pueden volver a insertar por JS tras un filtro AJAX (ver
+   FiltrosSidebar.astro), y el markup generado por JS no lleva el scope de Astro. */
+.no-results,
+.grid-error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-family: var(--font-secondary);
+}
+
+.grid-error button {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.5rem;
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* Tarjeta "skeleton": mismo tamaño que .property-card, para que no salte el layout
+   mientras se espera una respuesta nueva (ver renderSkeletonCards en
+   renderInmuebleCard.ts). Global por la misma razón que el resto de este archivo. */
+.property-card-skeleton {
+  background-color: var(--color-white);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.property-card-skeleton__image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+
+.property-card-skeleton__content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.property-card-skeleton__bar {
+  border-radius: 6px;
+  height: 0.9rem;
+}
+
+.property-card-skeleton__bar--title {
+  height: 1.25rem;
+  width: 80%;
+}
+
+.property-card-skeleton__bar--price {
+  width: 45%;
+  margin-top: auto;
+}
+
+.property-card-skeleton__image,
+.property-card-skeleton__bar {
+  background: linear-gradient(100deg, #eceae2 30%, #f6f4ec 50%, #eceae2 70%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}

@@ -1,0 +1,24 @@
+---
+export const prerender = false; // Necesita leer el query string (filtros) en cada request.
+
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import CatalogoSection from '../components/CatalogoSection.astro';
+
+// El listado cambia poco de un minuto a otro; cachear brevemente reduce la carga sobre el backend.
+Astro.response.headers.set('Cache-Control', 'public, max-age=60');
+---
+
+<Layout title="Catálogo de Inmuebles | Sansalica" theme="light">
+  <div class="catalog-page">
+    <Navbar activeLink="inmuebles" variant="page" />
+    <CatalogoSection />
+  </div>
+</Layout>
+
+<style>
+  .catalog-page {
+    min-height: 100vh;
+    background-color: var(--color-cream);
+  }
+</style>
