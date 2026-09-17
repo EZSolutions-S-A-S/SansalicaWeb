@@ -1,28 +1,10 @@
 ---
 import FiltrosSidebar from './FiltrosSidebar.astro';
 import InmueblePublicCard from './InmueblePublicCard.astro';
+import { buildInmueblesQuery, fetchInmuebles } from '../lib/inmuebles';
 
-const API_URL = import.meta.env.PUBLIC_API_URL || 'https://sansalicaback.onrender.com/api';
-const API_KEY = import.meta.env.SECRET_API_KEY || ''; // TODO: Agrega tu API Key en el archivo .env
-
-let inmuebles = [];
-
-try {
-  const res = await fetch(`${API_URL}/inmuebles/`, {
-    headers: {
-      'Authorization': `Api-Key ${API_KEY}`,
-      'Content-Type': 'application/json'
-    }
-  });
-  if (res.ok) {
-    const data = await res.json();
-    inmuebles = data.results || data || []; // Handle both paginated and non-paginated arrays
-  } else {
-    console.error("Error fetching inmuebles:", res.status, res.statusText);
-  }
-} catch (error) {
-  console.error("Error fetching inmuebles:", error);
-}
+const { filters, queryString } = buildInmueblesQuery(Astro.url.searchParams);
+const { inmuebles } = await fetchInmuebles(queryString);
 ---
 
 <section class="catalogo-section">
@@ -34,10 +16,10 @@ try {
 
     <div class="catalogo-layout">
       <div class="catalogo-sidebar">
-        <FiltrosSidebar />
+        <FiltrosSidebar filters={filters} basePath="/catalogo" />
       </div>
 
-      <div class="catalogo-grid">
+      <div class="catalogo-grid" id="catalogo-grid">
         {inmuebles.map((inmueble: any) => (
           <InmueblePublicCard inmueble={inmueble} />
         ))}
@@ -98,12 +80,11 @@ try {
     align-items: stretch;
   }
 
-  .no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-    font-family: var(--font-secondary);
+  /* Mientras carga se ve el skeleton (property-card.css), así que aquí solo se
+     bloquea la interacción — sin atenuar opacidad, para no duplicar la señal de
+     "cargando" encima del propio shimmer del skeleton. */
+  .catalogo-grid[data-loading="true"] {
+    pointer-events: none;
   }
 
   /* ── Responsive ── */

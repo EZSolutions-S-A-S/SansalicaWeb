@@ -1,31 +1,61 @@
 ---
 // FiltrosSidebar.astro
+import { DEPARTAMENTOS, CIUDADES_POR_DEPARTAMENTO } from '../constants/departamentos';
+import { FEATURES, AMENITIES } from '../constants/propertyFeatures';
+
+export interface Props {
+  filters?: {
+    departamento?: string;
+    ciudad?: string;
+    operation_type?: string;
+    property_type?: string;
+    min_price?: string;
+    max_price?: string;
+    min_bedrooms?: string;
+    min_bathrooms?: string;
+    min_parking_spots?: string;
+    features?: string[];
+    amenities?: string[];
+  };
+  basePath?: string;
+}
+
+const { filters = {}, basePath = '/catalogo' } = Astro.props;
+
+const ciudadesDelDepartamento = filters.departamento
+  ? CIUDADES_POR_DEPARTAMENTO[filters.departamento] || []
+  : [];
 ---
 
 <aside class="filters-sidebar">
-  <form class="filters-form" id="filters-form">
+  <form class="filters-form" id="filters-form" method="GET" action={basePath}>
     <div class="filters-body">
       <h2 class="filters-sidebar__title">Filtros</h2>
-      
+
       <!-- UBICACIÓN -->
       <div class="filter-group">
         <h3 class="filter-group__label">UBICACIÓN</h3>
         <div class="select-wrapper">
-          <select name="city" aria-label="Ciudades" class="filter-input">
-            <option value="">Ciudades</option>
-            <option value="bogota">Bogotá</option>
-            <option value="medellin">Medellín</option>
-            <option value="cartagena">Cartagena</option>
+          <select name="departamento" id="departamento-select" aria-label="Departamento" class="filter-input">
+            <option value="">Departamento</option>
+            {DEPARTAMENTOS.map((depto) => (
+              <option value={depto} selected={filters.departamento === depto}>{depto}</option>
+            ))}
           </select>
           <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </div>
         <div class="select-wrapper mt-2">
-          <select name="zone" aria-label="Zonas" class="filter-input">
-            <option value="">Zonas</option>
-            <option value="norte">Norte</option>
-            <option value="sur">Sur</option>
-            <option value="oriente">Oriente</option>
-            <option value="occidente">Occidente</option>
+          <select
+            name="ciudad"
+            id="ciudad-select"
+            aria-label="Ciudad"
+            class="filter-input"
+            disabled={!filters.departamento}
+          >
+            <option value="">{filters.departamento ? 'Ciudad' : 'Elige un departamento primero'}</option>
+            {ciudadesDelDepartamento.map((ciudad) => (
+              <option value={ciudad} selected={filters.ciudad === ciudad}>{ciudad}</option>
+            ))}
           </select>
           <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </div>
@@ -37,18 +67,19 @@
         <div class="select-wrapper">
           <select name="operation_type" aria-label="Venta y renta" class="filter-input">
             <option value="">Venta y renta</option>
-            <option value="Venta">Venta</option>
-            <option value="Alquiler">Renta</option>
+            <option value="Venta" selected={filters.operation_type === 'Venta'}>Venta</option>
+            <option value="Alquiler" selected={filters.operation_type === 'Alquiler'}>Renta</option>
           </select>
           <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </div>
         <div class="select-wrapper mt-2">
           <select name="property_type" aria-label="Tipos" class="filter-input">
             <option value="">Tipos</option>
-            <option value="Casa">Casa</option>
-            <option value="Apartamento">Apartamento</option>
-            <option value="Local Comercial">Local Comercial</option>
-            <option value="Terreno">Terreno</option>
+            <option value="Casa" selected={filters.property_type === 'Casa'}>Casa</option>
+            <option value="Apartamento" selected={filters.property_type === 'Apartamento'}>Apartamento</option>
+            <option value="Local Comercial" selected={filters.property_type === 'Local Comercial'}>Local Comercial</option>
+            <option value="Terreno" selected={filters.property_type === 'Terreno'}>Terreno</option>
+            <option value="Finca" selected={filters.property_type === 'Finca'}>Finca</option>
           </select>
           <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </div>
@@ -58,178 +89,258 @@
       <div class="filter-group">
         <h3 class="filter-group__label">PRECIO (COP)</h3>
         <div class="filter-row">
-          <input type="number" name="min_price" placeholder="Min" class="filter-input flex-1" min="0" />
-          <input type="number" name="max_price" placeholder="Max" class="filter-input flex-1" min="0" />
+          <input type="number" name="min_price" placeholder="Min" class="filter-input flex-1" min="0" value={filters.min_price || ''} />
+          <input type="number" name="max_price" placeholder="Max" class="filter-input flex-1" min="0" value={filters.max_price || ''} />
         </div>
       </div>
 
       <!-- CARACTERÍSTICAS -->
       <div class="filter-group">
         <h3 class="filter-group__label">CARACTERÍSTICAS</h3>
-        <div class="select-wrapper mb-2">
-          <select name="min_sqm" aria-label="Mín m2" class="filter-input">
-            <option value="">Mín m²</option>
-            <option value="50">50 m²</option>
-            <option value="100">100 m²</option>
-            <option value="200">200 m²</option>
-          </select>
-          <svg class="select-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-        </div>
         <div class="filter-row">
           <div class="select-wrapper flex-1">
-            <select name="bedrooms" aria-label="Habitaciones" class="filter-input px-sm">
+            <select name="min_bedrooms" aria-label="Habitaciones" class="filter-input px-sm">
               <option value="">Hab</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
+              {[1, 2, 3, 4].map((n) => (
+                <option value={n} selected={filters.min_bedrooms === String(n)}>{n}+</option>
+              ))}
             </select>
             <svg class="select-icon select-icon--small" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </div>
           <div class="select-wrapper flex-1">
-            <select name="bathrooms" aria-label="Baños" class="filter-input px-sm">
+            <select name="min_bathrooms" aria-label="Baños" class="filter-input px-sm">
               <option value="">Bañ</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
+              {[1, 2, 3].map((n) => (
+                <option value={n} selected={filters.min_bathrooms === String(n)}>{n}+</option>
+              ))}
             </select>
             <svg class="select-icon select-icon--small" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </div>
           <div class="select-wrapper flex-1">
-            <select name="parking_spots" aria-label="Parqueaderos" class="filter-input px-sm">
+            <select name="min_parking_spots" aria-label="Parqueaderos" class="filter-input px-sm">
               <option value="">Par</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
+              {[1, 2, 3].map((n) => (
+                <option value={n} selected={filters.min_parking_spots === String(n)}>{n}+</option>
+              ))}
             </select>
             <svg class="select-icon select-icon--small" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </div>
         </div>
       </div>
 
-      <!-- INTERIOR -->
+      <!-- INTERIOR (características) -->
       <div class="filter-group">
         <h3 class="filter-group__label">INTERIOR</h3>
         <div class="checkbox-list">
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Balcón" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Balcón</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Cocina Integral" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Cocina Integral</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Aire Acondicionado" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Aire Acondicionado</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Amoblado" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Amoblado</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Terraza" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Terraza</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Cuarto de Servicio" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Cuarto de Servicio</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Clósets Empotrados" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Clósets Empotrados</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Piso en Madera" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Piso en Madera</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Estudio" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Estudio</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="features" value="Ventanas Panorámicas" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Ventanas Panorámicas</span>
-          </label>
+          {FEATURES.map((feature) => (
+            <label class="custom-checkbox">
+              <input type="checkbox" name="features" value={feature} checked={filters.features?.includes(feature)} />
+              <span class="checkmark"></span>
+              <span class="checkbox-text">{feature}</span>
+            </label>
+          ))}
         </div>
       </div>
 
-      <!-- ZONAS COMUNES -->
+      <!-- ZONAS COMUNES (amenities) -->
       <div class="filter-group">
         <h3 class="filter-group__label">ZONAS COMUNES</h3>
         <div class="checkbox-list">
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Piscina" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Piscina</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Salón Social" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Salón Social</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Vigilancia 24h" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Vigilancia 24h</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Parqueadero Visitantes" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Parqueadero Visitantes</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Gimnasio" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Gimnasio</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Ascensor" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Ascensor</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Zona BBQ" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Zona BBQ</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Portería" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Portería</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Jardín" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Jardín</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" name="amenities" value="Cancha de Tenis" />
-            <span class="checkmark"></span>
-            <span class="checkbox-text">Cancha de Tenis</span>
-          </label>
+          {AMENITIES.map((amenity) => (
+            <label class="custom-checkbox">
+              <input type="checkbox" name="amenities" value={amenity} checked={filters.amenities?.includes(amenity)} />
+              <span class="checkmark"></span>
+              <span class="checkbox-text">{amenity}</span>
+            </label>
+          ))}
         </div>
       </div>
     </div> <!-- /filters-body -->
 
     <div class="filters-footer">
       <div class="filters-actions">
-        <button type="submit" class="btn-submit">Aplicar filtros</button>
-        <button type="reset" class="btn-reset">Limpiar filtros</button>
+        <!-- Sin botón visible: los filtros se aplican solos (ver <script> más abajo).
+             Este botón sigue en el DOM pero oculto visualmente (no display:none) para
+             que, si JS falla, el <form> tenga submit implícito por Enter y el fallback
+             GET normal (basePath) siga funcionando. -->
+        <button type="submit" class="visually-hidden">Aplicar filtros</button>
+        <a href={basePath} id="reset-filters" class="btn-reset">Limpiar filtros</a>
       </div>
     </div>
   </form>
 </aside>
+
+<script>
+  import { CIUDADES_POR_DEPARTAMENTO } from '../constants/departamentos';
+  import { FILTER_PARAMS, MULTI_FILTER_PARAMS } from '../lib/filterParams';
+  import { renderCardHTML, renderSkeletonCards } from '../lib/renderInmuebleCard';
+
+  const DEBOUNCE_MS = 500;
+  // Solo se muestra el skeleton si la respuesta tarda más que esto — evita el
+  // parpadeo en respuestas rápidas (ej. las que ya están en caché en el servidor).
+  const SKELETON_DELAY_MS = 200;
+
+  function initFiltrosSidebar() {
+    const form = document.getElementById('filters-form') as HTMLFormElement | null;
+    const departamentoSelect = document.getElementById('departamento-select') as HTMLSelectElement | null;
+    const ciudadSelect = document.getElementById('ciudad-select') as HTMLSelectElement | null;
+    const resetLink = document.getElementById('reset-filters');
+    const grid = document.getElementById('catalogo-grid');
+
+    if (!form || !departamentoSelect || !ciudadSelect || !grid) return;
+
+    let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+    let currentController: AbortController | null = null;
+
+    function populateCiudades(departamento: string, ciudadSeleccionada: string) {
+      const ciudades = departamento ? (CIUDADES_POR_DEPARTAMENTO[departamento] || []) : [];
+
+      ciudadSelect!.innerHTML = '';
+
+      const placeholderOption = document.createElement('option');
+      placeholderOption.value = '';
+      placeholderOption.textContent = departamento ? 'Ciudad' : 'Elige un departamento primero';
+      ciudadSelect!.appendChild(placeholderOption);
+
+      ciudades.forEach((ciudad) => {
+        const option = document.createElement('option');
+        option.value = ciudad;
+        option.textContent = ciudad;
+        if (ciudad === ciudadSeleccionada) option.selected = true;
+        ciudadSelect!.appendChild(option);
+      });
+
+      ciudadSelect!.disabled = !departamento;
+    }
+
+    function buildQueryString(): string {
+      const params = new URLSearchParams();
+      for (const key of FILTER_PARAMS) {
+        const field = form!.elements.namedItem(key);
+        const value = field && 'value' in field ? (field as HTMLInputElement).value : '';
+        if (value) params.set(key, value);
+      }
+      for (const key of MULTI_FILTER_PARAMS) {
+        form!.querySelectorAll<HTMLInputElement>(`input[name="${key}"]:checked`).forEach((checkbox) => {
+          params.append(key, checkbox.value);
+        });
+      }
+      return params.toString();
+    }
+
+    function renderGrid(inmuebles: any[]) {
+      if (!inmuebles.length) {
+        grid!.innerHTML = '<div class="no-results"><p>No se encontraron inmuebles con estos filtros.</p></div>';
+        return;
+      }
+      grid!.innerHTML = inmuebles.map(renderCardHTML).join('');
+    }
+
+    function renderError() {
+      grid!.innerHTML =
+        '<div class="grid-error"><p>No se pudo actualizar el catálogo.</p><button type="button" id="retry-filters">Reintentar</button></div>';
+      document.getElementById('retry-filters')?.addEventListener('click', () => applyFilters());
+    }
+
+    async function applyFilters() {
+      const qs = buildQueryString();
+      const basePath = form!.getAttribute('action') || '/catalogo';
+      history.replaceState(null, '', qs ? `${basePath}?${qs}` : basePath);
+
+      currentController?.abort();
+      const controller = new AbortController();
+      currentController = controller;
+
+      // Solo se ve el skeleton si la respuesta tarda más de SKELETON_DELAY_MS (ej.
+      // caché fría). Con caché tibia o stale-while-revalidate del proxy, la
+      // respuesta suele llegar antes y el usuario nunca ve el placeholder.
+      const previousCount = grid!.querySelectorAll('.property-card, .property-card-skeleton').length;
+      const skeletonTimer = setTimeout(() => {
+        grid!.setAttribute('data-loading', 'true');
+        grid!.innerHTML = renderSkeletonCards(previousCount);
+      }, SKELETON_DELAY_MS);
+
+      try {
+        const res = await fetch(`/api/inmuebles${qs ? `?${qs}` : ''}`, { signal: controller.signal });
+        if (!res.ok) throw new Error(`status ${res.status}`);
+        const data = await res.json();
+        clearTimeout(skeletonTimer);
+        renderGrid(data.inmuebles || []);
+      } catch (error) {
+        clearTimeout(skeletonTimer);
+        if ((error as any)?.name === 'AbortError') return; // reemplazado por una petición más nueva
+        console.error('Error actualizando el catálogo:', error);
+        renderError();
+      } finally {
+        clearTimeout(skeletonTimer);
+        if (currentController === controller) {
+          grid!.removeAttribute('data-loading');
+        }
+      }
+    }
+
+    function scheduleApplyFilters(delay: number) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(applyFilters, delay);
+    }
+
+    function clearFilters() {
+      departamentoSelect!.value = '';
+      populateCiudades('', '');
+      form!.querySelectorAll<HTMLSelectElement>('select').forEach((select) => {
+        if (select !== ciudadSelect) select.value = '';
+      });
+      form!.querySelectorAll<HTMLInputElement>('input[type="number"]').forEach((input) => {
+        input.value = '';
+      });
+      form!.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+    }
+
+    // Sincroniza el select de ciudad con la selección actual (relevante al volver
+    // atrás con el navegador, donde el DOM puede restaurarse desde bfcache).
+    populateCiudades(departamentoSelect.value, ciudadSelect.value);
+
+    departamentoSelect.addEventListener('change', () => {
+      populateCiudades(departamentoSelect.value, '');
+      scheduleApplyFilters(0);
+    });
+    ciudadSelect.addEventListener('change', () => scheduleApplyFilters(0));
+    form.querySelectorAll('select').forEach((select) => {
+      if (select === departamentoSelect || select === ciudadSelect) return; // ya tienen su propio listener arriba
+      select.addEventListener('change', () => scheduleApplyFilters(0));
+    });
+    form.querySelectorAll('input[type="number"]').forEach((input) => {
+      input.addEventListener('input', () => scheduleApplyFilters(DEBOUNCE_MS));
+    });
+    form.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+      checkbox.addEventListener('change', () => scheduleApplyFilters(0));
+    });
+
+    // Si algo dispara un submit real (ej. Enter), lo interceptamos y aplicamos ya
+    // mismo en vez de dejar que el navegador recargue la página.
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      clearTimeout(debounceTimer);
+      applyFilters();
+    });
+
+    resetLink?.addEventListener('click', (event) => {
+      event.preventDefault();
+      clearFilters();
+      clearTimeout(debounceTimer);
+      applyFilters();
+    });
+  }
+
+  document.addEventListener('astro:page-load', initFiltrosSidebar);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    initFiltrosSidebar();
+  } else {
+    document.addEventListener('DOMContentLoaded', initFiltrosSidebar);
+  }
+</script>
 
 <style>
   .filters-sidebar {
@@ -309,6 +420,11 @@
     opacity: 1;
   }
 
+  .filter-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
   /* Make select gray when the empty option is selected */
   select.filter-input:has(option[value=""]:checked) {
     color: #9CA3AF;
@@ -331,7 +447,7 @@
 
   .filter-input.px-sm {
     padding-left: 0.5rem;
-    padding-right: 1.5rem; /* Space for arrow */
+    padding-right: 1.5rem; /* Espacio para la flecha */
   }
 
   .filter-row {
@@ -346,10 +462,6 @@
 
   .mt-2 {
     margin-top: 0.5rem;
-  }
-
-  .mb-2 {
-    margin-bottom: 0.5rem;
   }
 
   /* Checkboxes */
@@ -435,25 +547,16 @@
     gap: 0.75rem;
   }
 
-  .btn-submit {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: var(--color-navy);
-    border: none;
-    border-radius: 6px;
-    color: var(--color-white);
-    font-family: var(--font-secondary);
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(29, 56, 114, 0.25);
-    transition: all 0.2s ease;
-  }
-
-  .btn-submit:hover {
-    background-color: #152955;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(29, 56, 114, 0.35);
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .btn-reset {
@@ -468,6 +571,9 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-align: center;
+    text-decoration: none;
+    display: block;
   }
 
   .btn-reset:hover {
