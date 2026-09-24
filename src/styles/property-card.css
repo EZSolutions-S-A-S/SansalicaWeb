@@ -133,7 +133,31 @@
   color: #999;
 }
 
-/* Estados de la grilla del catálogo (src/components/CatalogoSection.astro).
+/* Grilla de resultados del catálogo (CatalogoGrid.astro). Global porque
+   CatalogoSection.astro escribe el fallback del server:defer con la misma clase
+   (ver slot="fallback" en CatalogoSection.astro) — dos componentes distintos
+   necesitan el mismo estilo para "catalogo-grid", scoped no cruza esa frontera. */
+.catalogo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  align-items: stretch;
+}
+
+/* Mientras carga se ve el skeleton, así que aquí solo se bloquea la interacción
+   — sin atenuar opacidad, para no duplicar la señal de "cargando" encima del
+   propio shimmer del skeleton. */
+.catalogo-grid[data-loading="true"] {
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .catalogo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Estados de la grilla del catálogo (src/components/CatalogoGrid.astro).
    Global por la misma razón que .property-card: el "sin resultados" y el error de
    red se pueden volver a insertar por JS tras un filtro AJAX (ver
    FiltrosSidebar.astro), y el markup generado por JS no lleva el scope de Astro. */

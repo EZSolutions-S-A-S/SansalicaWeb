@@ -185,9 +185,15 @@ const ciudadesDelDepartamento = filters.departamento
     const departamentoSelect = document.getElementById('departamento-select') as HTMLSelectElement | null;
     const ciudadSelect = document.getElementById('ciudad-select') as HTMLSelectElement | null;
     const resetLink = document.getElementById('reset-filters');
-    const grid = document.getElementById('catalogo-grid');
+    // No se cachea el nodo: la grilla es un server island (CatalogoGrid.astro,
+    // ver CatalogoSection.astro) y su contenido inicial (el fallback/skeleton)
+    // se reemplaza por el nodo real cuando termina de cargar. Si guardáramos la
+    // referencia una sola vez acá, después de ese reemplazo apuntaría a un
+    // elemento ya desconectado del DOM y los filtros dejarían de actualizar la
+    // grilla visible. Por eso cada función vuelve a buscarlo con getGrid().
+    const getGrid = () => document.getElementById('catalogo-grid');
 
-    if (!form || !departamentoSelect || !ciudadSelect || !grid) return;
+    if (!form || !departamentoSelect || !ciudadSelect || !getGrid()) return;
 
     let debounceTimer: ReturnType<typeof setTimeout> | undefined;
     let currentController: AbortController | null = null;
@@ -217,7 +223,7 @@ const ciudadesDelDepartamento = filters.departamento
       const params = new URLSearchParams();
       for (const key of FILTER_PARAMS) {
         const field = form!.elements.namedItem(key);
-        const value = field && 'value' in field ? (field as HTMLInputElement).value : '';
+        const value = field && 'value' in field ? field.value : '';
         if (value) params.set(key, value);
       }
       for (const key of MULTI_FILTER_PARAMS) {
@@ -229,15 +235,19 @@ const ciudadesDelDepartamento = filters.departamento
     }
 
     function renderGrid(inmuebles: any[]) {
+      const gridEl = getGrid();
+      if (!gridEl) return;
       if (!inmuebles.length) {
-        grid!.innerHTML = '<div class="no-results"><p>No se encontraron inmuebles con estos filtros.</p></div>';
+        gridEl.innerHTML = '<div class="no-results"><p>No se encontraron inmuebles con estos filtros.</p></div>';
         return;
       }
-      grid!.innerHTML = inmuebles.map(renderCardHTML).join('');
+      gridEl.innerHTML = inmuebles.map(renderCardHTML).join('');
     }
 
     function renderError() {
-      grid!.innerHTML =
+      const gridEl = getGrid();
+      if (!gridEl) return;
+      gridEl.innerHTML =
         '<div class="grid-error"><p>No se pudo actualizar el catálogo.</p><button type="button" id="retry-filters">Reintentar</button></div>';
       document.getElementById('retry-filters')?.addEventListener('click', () => applyFilters());
     }
@@ -254,10 +264,12 @@ const ciudadesDelDepartamento = filters.departamento
       // Solo se ve el skeleton si la respuesta tarda más de SKELETON_DELAY_MS (ej.
       // caché fría). Con caché tibia o stale-while-revalidate del proxy, la
       // respuesta suele llegar antes y el usuario nunca ve el placeholder.
-      const previousCount = grid!.querySelectorAll('.property-card, .property-card-skeleton').length;
+      const previousCount = getGrid()?.querySelectorAll('.property-card, .property-card-skeleton').length ?? 0;
       const skeletonTimer = setTimeout(() => {
-        grid!.setAttribute('data-loading', 'true');
-        grid!.innerHTML = renderSkeletonCards(previousCount);
+        const gridEl = getGrid();
+        if (!gridEl) return;
+        gridEl.setAttribute('data-loading', 'true');
+        gridEl.innerHTML = renderSkeletonCards(previousCount);
       }, SKELETON_DELAY_MS);
 
       try {
@@ -274,7 +286,7 @@ const ciudadesDelDepartamento = filters.departamento
       } finally {
         clearTimeout(skeletonTimer);
         if (currentController === controller) {
-          grid!.removeAttribute('data-loading');
+          getGrid()?.removeAttribute('data-loading');
         }
       }
     }

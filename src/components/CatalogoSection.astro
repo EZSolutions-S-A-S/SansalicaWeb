@@ -1,10 +1,9 @@
 ---
 import FiltrosSidebar from './FiltrosSidebar.astro';
-import InmueblePublicCard from './InmueblePublicCard.astro';
-import { buildInmueblesQuery, fetchInmuebles } from '../lib/inmuebles';
+import CatalogoGrid from './CatalogoGrid.astro';
+import { buildInmueblesQuery } from '../lib/inmuebles';
 
 const { filters, queryString } = buildInmueblesQuery(Astro.url.searchParams);
-const { inmuebles } = await fetchInmuebles(queryString);
 ---
 
 <section class="catalogo-section">
@@ -19,17 +18,20 @@ const { inmuebles } = await fetchInmuebles(queryString);
         <FiltrosSidebar filters={filters} basePath="/catalogo" />
       </div>
 
-      <div class="catalogo-grid" id="catalogo-grid">
-        {inmuebles.map((inmueble: any) => (
-          <InmueblePublicCard inmueble={inmueble} />
-        ))}
-
-        {inmuebles.length === 0 && (
-          <div class="no-results">
-            <p>No se encontraron inmuebles con estos filtros.</p>
-          </div>
-        )}
-      </div>
+      <CatalogoGrid server:defer queryString={queryString}>
+        <div class="catalogo-grid" id="catalogo-grid" slot="fallback">
+          {Array.from({ length: 6 }).map(() => (
+            <div class="property-card-skeleton">
+              <div class="property-card-skeleton__image"></div>
+              <div class="property-card-skeleton__content">
+                <div class="property-card-skeleton__bar property-card-skeleton__bar--title"></div>
+                <div class="property-card-skeleton__bar" style="width: 60%"></div>
+                <div class="property-card-skeleton__bar property-card-skeleton__bar--price"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CatalogoGrid>
     </div>
   </div>
 </section>
@@ -73,20 +75,6 @@ const { inmuebles } = await fetchInmuebles(queryString);
     align-items: start;
   }
 
-  .catalogo-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    align-items: stretch;
-  }
-
-  /* Mientras carga se ve el skeleton (property-card.css), así que aquí solo se
-     bloquea la interacción — sin atenuar opacidad, para no duplicar la señal de
-     "cargando" encima del propio shimmer del skeleton. */
-  .catalogo-grid[data-loading="true"] {
-    pointer-events: none;
-  }
-
   /* ── Responsive ── */
   @media (max-width: 992px) {
     .catalogo-layout {
@@ -97,10 +85,6 @@ const { inmuebles } = await fetchInmuebles(queryString);
   @media (max-width: 768px) {
     .catalogo-section {
       padding: 2rem 1rem 3rem;
-    }
-
-    .catalogo-grid {
-      grid-template-columns: 1fr;
     }
   }
 </style>

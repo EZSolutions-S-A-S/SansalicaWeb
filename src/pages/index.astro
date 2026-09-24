@@ -16,7 +16,34 @@ import FooterSection from '../components/FooterSection.astro';
   </div>
 
   <div id="inmuebles" data-section="inmuebles">
-    <PropiedadesDestacadas />
+    <PropiedadesDestacadas server:defer>
+      <div class="featured-skeleton" slot="fallback">
+        <div class="property-card-skeleton">
+          <div class="property-card-skeleton__image"></div>
+          <div class="property-card-skeleton__content">
+            <div class="property-card-skeleton__bar property-card-skeleton__bar--title"></div>
+            <div class="property-card-skeleton__bar" style="width: 60%"></div>
+            <div class="property-card-skeleton__bar property-card-skeleton__bar--price"></div>
+          </div>
+        </div>
+        <div class="property-card-skeleton">
+          <div class="property-card-skeleton__image"></div>
+          <div class="property-card-skeleton__content">
+            <div class="property-card-skeleton__bar property-card-skeleton__bar--title"></div>
+            <div class="property-card-skeleton__bar" style="width: 60%"></div>
+            <div class="property-card-skeleton__bar property-card-skeleton__bar--price"></div>
+          </div>
+        </div>
+        <div class="property-card-skeleton">
+          <div class="property-card-skeleton__image"></div>
+          <div class="property-card-skeleton__content">
+            <div class="property-card-skeleton__bar property-card-skeleton__bar--title"></div>
+            <div class="property-card-skeleton__bar" style="width: 60%"></div>
+            <div class="property-card-skeleton__bar property-card-skeleton__bar--price"></div>
+          </div>
+        </div>
+      </div>
+    </PropiedadesDestacadas>
   </div>
 
   <div id="nosotros" data-section="nosotros">
@@ -32,6 +59,32 @@ import FooterSection from '../components/FooterSection.astro';
 <style>
   #nosotros, #inmuebles, #contacto {
     scroll-margin-top: 90px;
+  }
+
+  /* Fallback del server island de Propiedades Destacadas: mismo contenedor/grid
+     que .featured-properties-container/.featured-grid (PropiedadesDestacadas.astro)
+     para que no salte el layout mientras se resuelve la petición. */
+  .featured-skeleton {
+    width: calc(100% - 4rem);
+    max-width: 1100px;
+    margin: 2.5rem auto 0;
+    padding: 5rem 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 1024px) {
+    .featured-skeleton {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .featured-skeleton {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 
