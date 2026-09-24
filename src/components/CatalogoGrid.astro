@@ -1,0 +1,27 @@
+---
+// Server island (ver CatalogoSection.astro, que lo usa con server:defer): hace
+// el fetch lento al backend por separado, así el resto de /catalogo (navbar +
+// sidebar de filtros) se manda al navegador de inmediato en vez de esperar a
+// que termine esta consulta.
+import InmueblePublicCard from './InmueblePublicCard.astro';
+import { fetchInmuebles } from '../lib/inmuebles';
+
+interface Props {
+  queryString: string;
+}
+
+const { queryString } = Astro.props;
+const { inmuebles } = await fetchInmuebles(queryString);
+---
+
+<div class="catalogo-grid" id="catalogo-grid">
+  {inmuebles.map((inmueble: any) => (
+    <InmueblePublicCard inmueble={inmueble} />
+  ))}
+
+  {inmuebles.length === 0 && (
+    <div class="no-results">
+      <p>No se encontraron inmuebles con estos filtros.</p>
+    </div>
+  )}
+</div>
